@@ -6,6 +6,7 @@
 package view;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import javax.swing.JLabel;
 
 /**
@@ -15,7 +16,7 @@ import javax.swing.JLabel;
 public class TelaBusca extends javax.swing.JFrame {
     int[][] matriz = {
         {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4},
-        {3,1,0,3,1,3,1,3,1,1,1,1,1,1,1,4,4,4,4,4,4,4,2,2,-1,2,2,4,4,4,4,4,4,2,2,2,2,4,4,4,4,4},
+        {3,1,0,3,1,3,1,3,1,1,1,1,1,1,1,4,4,4,4,4,4,4,2,2,-4,2,2,4,4,4,4,4,4,2,2,2,2,4,4,4,4,4},
         {3,1,1,3,1,1,1,3,1,3,1,1,1,1,1,1,4,4,4,4,4,2,2,2,2,2,2,2,4,4,4,4,2,2,2,2,2,2,4,4,4,4},
         {3,1,3,3,1,3,1,3,1,3,1,1,3,1,1,1,1,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,4},
         {3,1,1,1,1,3,1,3,1,3,1,1,3,1,1,1,1,4,2,4,4,2,2,2,2,2,2,2,4,4,4,4,2,2,2,2,2,2,4,4,4,4},
@@ -31,7 +32,7 @@ public class TelaBusca extends javax.swing.JFrame {
         {3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,3,1,3,1,3,3,1,3,1,4},
         {3,1,3,3,3,3,3,1,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,1,1,4},
         {3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,1,1,1,1,1,4,4,4,4,4,4,4,4,4,4},
-        {3,1,1,1,1,1,1,1,1,5,1,1,3,1,3,1,1,5,1,1,1,1,1,1,1,1,5,1,1,1,5,1,4,2,2,2,2,2,2,-1,2,4},
+        {3,1,1,1,1,1,1,1,1,5,1,1,3,1,3,1,1,5,1,1,1,1,1,1,1,1,5,1,1,1,5,1,4,2,2,2,2,2,2,-3,2,4},
         {3,1,3,1,1,3,1,1,1,5,1,1,1,1,1,1,1,5,1,3,1,1,1,1,3,1,5,5,5,5,5,1,4,2,4,2,2,4,2,2,2,4},
         {3,1,3,1,1,3,1,1,1,5,1,1,3,1,3,1,1,1,1,1,1,1,1,1,1,1,5,1,1,1,1,1,4,2,4,4,4,4,4,4,4,4},
         {3,1,3,1,1,3,1,1,1,5,1,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,5,1,1,1,4,1,4,2,2,2,2,2,2,2,2,4},
@@ -41,12 +42,12 @@ public class TelaBusca extends javax.swing.JFrame {
         {3,3,3,3,3,3,3,1,1,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,1,1,5,1,4,1,4,1,1,1,1,1,1,1,1,1,1,4},
         {3,3,3,3,3,3,1,1,3,3,3,3,3,1,3,3,3,3,1,3,3,3,1,1,1,1,5,1,4,1,1,1,1,1,1,1,1,1,1,1,1,4},
         {3,1,3,1,3,1,1,1,3,3,3,3,1,1,1,3,3,3,1,3,3,3,1,1,1,1,5,1,4,1,1,1,4,4,4,4,4,4,4,4,4,4},
-        {4,1,1,1,3,1,1,1,3,3,3,1,1,1,1,1,3,3,1,1,1,1,1,0,1,1,5,1,1,1,1,1,1,1,1,4,1,1,1,1,1,4},
+        {4,1,1,1,3,1,1,1,3,3,3,1,1,1,1,1,3,3,1,1,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,4,1,1,1,1,1,4},
         {4,1,1,1,3,1,1,1,3,3,3,3,1,1,1,3,3,3,1,3,1,1,1,1,1,1,5,1,1,1,1,1,1,1,1,4,1,1,1,1,1,4},
         {4,1,1,1,1,1,1,1,1,3,3,3,3,1,3,3,3,1,1,3,1,1,1,1,1,1,5,5,5,1,5,5,5,5,1,4,1,4,4,4,4,4},
         {4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,1,1,1,1,1,1,4},
         {4,4,4,4,4,4,4,4,4,1,1,1,1,4,4,4,4,4,4,4,1,1,4,4,4,4,1,1,1,1,1,1,1,5,4,4,4,4,4,4,1,4},
-        {4,2,2,2,2,-1,2,2,4,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1,1,4,1,1,1,1,1,1,1,5,4,4,4,4,4,4,4,4},
+        {4,2,2,2,2,,2,2,4,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1,1,4,1,1,1,1,1,1,1,5,4,4,4,4,4,4,4,4},
         {4,2,4,4,2,2,2,2,4,1,1,1,1,4,1,1,1,1,1,1,1,1,3,1,1,4,1,1,5,5,5,5,5,5,5,5,4,4,5,5,5,4},
         {4,2,4,4,2,2,2,2,4,1,1,1,1,4,1,3,1,1,5,5,1,1,3,1,1,4,1,1,5,5,4,5,5,5,5,5,4,4,5,5,5,4},
         {4,2,2,2,2,2,2,2,4,1,1,4,1,4,1,1,1,1,5,5,1,1,3,1,1,4,1,1,5,5,5,5,4,4,5,5,4,4,5,5,5,4},
@@ -66,6 +67,9 @@ public class TelaBusca extends javax.swing.JFrame {
         Agua: 5
     Objetivo: 0
     Link: -1
+    amuleto verde: -2
+    amuleto azul: -3
+    amuleto vermelho: -4
     */
     public TelaBusca() {
         initComponents();
@@ -77,9 +81,26 @@ public class TelaBusca extends javax.swing.JFrame {
     static int floresta = 100;
     static int montanha = 150;
     static int agua = 180;
+    boolean amuletoVerde = false;
+    boolean amuletoAzul = false;
+    boolean amuletoVermelho = false;
+    ArrayList<ArrayList> visitados = new ArrayList<ArrayList>();
     
-    int heuristica(int linhaAtual, int colunaAtual) {
-        int linhaObjetivo = 1, colunaObjetivo = 2;
+    int heuristica(int linhaAtual, int colunaAtual, String objetivo) {
+        int linhaObjetivo = 0, colunaObjetivo = 0;
+        if(objetivo == "espada"){
+            linhaObjetivo = 1;
+            colunaObjetivo = 2;
+        } else if(objetivo == "amuleto azul") {
+            linhaObjetivo = 17;
+            colunaObjetivo = 39;
+        } else if(objetivo == "amuleto verde") {
+            linhaObjetivo = 32;
+            colunaObjetivo = 5;
+        } else if(objetivo == "amuleto vermelho") {
+            linhaObjetivo = 1;
+            colunaObjetivo = 24;
+        }
         int distanciaLinha = 0, distanciaColuna = 0;
         if(linhaAtual == linhaObjetivo) {
            distanciaLinha = 0;
@@ -98,8 +119,102 @@ public class TelaBusca extends javax.swing.JFrame {
         return distanciaLinha + distanciaColuna;
     }
     
+    void buscaAmuletoAzul(int linha, int coluna) {
+        int cima = 9999, baixo = 9999, esquerda = 9999, direita = 9999;
+        if(linha>0) {
+            cima = heuristica(linha - 1, coluna, "amuleto azul");
+            if(matriz[linha-1][coluna]==-3) {
+                
+            } else if(matriz[linha-1][coluna]==1) {
+                cima = cima + grama;
+            } else if(matriz[linha-1][coluna]==2){
+                cima = cima + areia;
+            } else if(matriz[linha-1][coluna]==3){
+                cima = cima + floresta;
+            } else if(matriz[linha-1][coluna]==4){
+                cima = cima + montanha;
+            } else if(matriz[linha-1][coluna]==5){
+                cima = cima + agua;
+            }
+        }
+        if(linha<41){
+            baixo = heuristica(linha + 1, coluna, "amuleto azul");
+            if(matriz[linha+1][coluna]==-3) {
+                
+            } else if(matriz[linha+1][coluna]==1) {
+                baixo = baixo + grama;
+            } else if(matriz[linha+1][coluna]==2){
+                baixo = baixo + areia;
+            } else if(matriz[linha+1][coluna]==3){
+                baixo = baixo + floresta;
+            } else if(matriz[linha+1][coluna]==4){
+                baixo = baixo + montanha;
+            } else if(matriz[linha+1][coluna]==5){
+                baixo = baixo + agua;
+            }
+        }
+        if(coluna>0) {
+            esquerda = heuristica(linha, coluna - 1, "amuleto azul");
+            if(matriz[linha][coluna-1]==-3) {
+                
+            } else if(matriz[linha][coluna-1]==1) {
+                esquerda = esquerda + grama;
+            } else if(matriz[linha][coluna-1]==2){
+                esquerda = esquerda + areia;
+            } else if(matriz[linha][coluna-1]==3){
+                esquerda = esquerda + floresta;
+            } else if(matriz[linha][coluna-1]==4){
+                esquerda = esquerda + montanha;
+            } else if(matriz[linha][coluna-1]==5){
+                esquerda = esquerda + agua;
+            }
+        }
+        if(coluna<41) {
+            direita = heuristica(linha, coluna + 1, "amuleto azul");
+            if(matriz[linha][coluna+1]==-3) {
+                
+            } else if(matriz[linha][coluna+1]==1) {
+                direita = direita + grama;
+            } else if(matriz[linha][coluna+1]==2){
+                direita = direita + areia;
+            } else if(matriz[linha][coluna+1]==3){
+                direita = direita + floresta;
+            } else if(matriz[linha][coluna+1]==4){
+                direita = direita + montanha;
+            } else if(matriz[linha][coluna+1]==5){
+                direita = direita + agua;
+            }
+        }
+        if(cima<baixo){
+            
+        }
+        
+    }
+    
+    void buscaAmuletoVerde(int linha, int coluna) {
+        
+    }
+    
+    void buscaAmuletoVermelho(int linha, int coluna) {
+        
+    }
+    
     void iniciaBusca(int linhaInicial, int colunaInicial) {
-        System.out.println(linhaInicial);
+        int distanciaAzul = 0, distanciaVerde = 0, distanciaVermelho = 0, menorValor;
+        String objetivoInicial;
+        distanciaAzul = heuristica(linhaInicial, colunaInicial, "amuleto azul");
+        distanciaVerde = heuristica(linhaInicial, colunaInicial, "amuleto verde");
+        distanciaVermelho = heuristica(linhaInicial, colunaInicial, "amuleto vermelho");
+        menorValor = distanciaAzul;
+        objetivoInicial = "amuleto azul";
+        if(menorValor > distanciaVerde) {
+            menorValor = distanciaVerde;
+            objetivoInicial = "amuleto verde";
+        }
+        if(menorValor > distanciaVermelho){
+            menorValor = distanciaVermelho;
+            objetivoInicial = "amuleto vermelho";
+        }
         
     }
 
@@ -242,7 +357,6 @@ public class TelaBusca extends javax.swing.JFrame {
         if(((Integer) linhaInput.getValue() < 0 || (Integer) linhaInput.getValue() > 41) || ((Integer) colunaInput.getValue() < 0 || (Integer) colunaInput.getValue() > 41)){
           
         } else {
-            //jTable1.
             iniciaBusca((Integer) linhaInput.getValue(), (Integer) colunaInput.getValue());
         }    
         
