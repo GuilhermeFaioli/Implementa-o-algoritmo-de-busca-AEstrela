@@ -6,6 +6,12 @@ import { AEstrela, getNodesInShortestPathOrder } from '../algoritmo/AEstrela';
 //Valores referentes a linha e coluna inicial e final, valores de custo por bioma do campo, e a matriz dando numeros referentes ao biomas
 const START_NODE_ROW = 27;
 const START_NODE_COL = 23;
+const GREEN_AMULET_NODE_ROW = 32;
+const GREEN_AMULET_NODE_COL = 5;
+const RED_AMULET_NODE_ROW = 1;
+const RED_AMULET_NODE_COL = 24;
+const BLUE_AMULET_NODE_ROW = 17;
+const BLUE_AMULET_NODE_COL = 39;
 const FINISH_NODE_ROW = 1;
 const FINISH_NODE_COL = 2;
 const grama = 10;
@@ -121,8 +127,14 @@ class BuscaAEstrela extends Component {
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         //Node Objetivo
         const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+        //Node amuleto Verde
+        const GreenNode = grid[GREEN_AMULET_NODE_ROW][GREEN_AMULET_NODE_COL];
+        //Node amuleto Azul
+        const BlueNode = grid[BLUE_AMULET_NODE_ROW][BLUE_AMULET_NODE_COL];
+        //Node amuleto Vermelho
+        const RedNode = grid[RED_AMULET_NODE_ROW][RED_AMULET_NODE_COL];
         //Inicia a busca a* e recebe os nodes visitados(todos nodes expandidos) em ordem ate o objetivo
-        const visitedNodesInOrder = AEstrela(grid, startNode, finishNode);
+        const visitedNodesInOrder = AEstrela(grid, startNode, finishNode, GreenNode, RedNode, BlueNode);
         //Recebe o menor caminho achado na busca
         const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
         //Função que ira criar animações no layout
@@ -142,13 +154,17 @@ class BuscaAEstrela extends Component {
                         return (
                             <div key={rowIdx}>
                                 {row.map((node, nodeIdx) => {
-                                    const { row, col, isFinish, isStart, heuristica, custo } = node;
+                                    const { row, col, isFinish, isStart, heuristica, custo, isGreenAmulet, isRedAmulet, isBlueAmulet, campo} = node;
                                     return (
                                         <Node
                                             key={nodeIdx}
                                             col={col}
                                             isFinish={isFinish}
                                             isStart={isStart}
+                                            isGreenAmulet={isGreenAmulet}
+                                            isRedAmulet={isRedAmulet}
+                                            isBlueAmulet={isBlueAmulet}
+                                            campo={campo}
                                             heuristica={heuristica}
                                             custo={custo}
                                             mouseIsPressed={mouseIsPressed}
@@ -175,7 +191,7 @@ const getInitialGrid = () => {
         const currentRow = []
         for (let col = 0; col < 42; col++) {
             //Chama funções necessarias para criar cada node
-            currentRow.push(createNode(col, row, heuristica(row, col), calculaCusto(row, col)))
+            currentRow.push(createNode(col, row, heuristica(row, col), calculaCusto(row, col), heuristica(GREEN_AMULET_NODE_ROW, GREEN_AMULET_NODE_COL), heuristica(RED_AMULET_NODE_ROW, RED_AMULET_NODE_COL), heuristica(BLUE_AMULET_NODE_ROW, BLUE_AMULET_NODE_COL)))
         }
         grid.push(currentRow);
     }
@@ -184,15 +200,15 @@ const getInitialGrid = () => {
 
 const calculaCusto = (row, col) => {
     //Calculo do custo com base nos numeros da matriz e o valor de custo de cada bioma
-    if (matriz[row][col] == 1) {
+    if (matriz[row][col] === 1) {
         return grama
-    } else if (matriz[row][col] == 2) {
+    } else if (matriz[row][col] === 2) {
         return areia
-    } else if (matriz[row][col] == 3) {
+    } else if (matriz[row][col] === 3) {
         return floresta
-    } else if (matriz[row][col] == 4) {
+    } else if (matriz[row][col] === 4) {
         return montanha
-    } else if (matriz[row][col] == 5) {
+    } else if (matriz[row][col] === 5) {
         return agua
     } else {
         return 999
@@ -202,14 +218,14 @@ const calculaCusto = (row, col) => {
 const heuristica = (row, col) => {
     //A heuristica escolhida para esse problema é o numero de casas na matriz ate o objetivo
     let distanciaLinha = 0, distanciaColuna = 0;
-    if (row == FINISH_NODE_ROW) {
+    if (row === FINISH_NODE_ROW) {
         distanciaLinha = 0;
     } else if (row < FINISH_NODE_ROW) {
         distanciaLinha = FINISH_NODE_ROW - row;
     } else if (row > FINISH_NODE_ROW) {
         distanciaLinha = row - FINISH_NODE_ROW;
     }
-    if (col == FINISH_NODE_COL) {
+    if (col === FINISH_NODE_COL) {
         distanciaColuna = 0;
     } else if (col < FINISH_NODE_COL) {
         distanciaColuna = FINISH_NODE_COL - col;
@@ -217,18 +233,25 @@ const heuristica = (row, col) => {
         distanciaColuna = col - FINISH_NODE_COL;
     }
     //Retorna a quantidade de linhas ate o objetivo + a quantidade de colunas ate o objetivo
-    return distanciaLinha + distanciaColuna;
+    return (distanciaLinha + distanciaColuna) * 10;
 }
 
 //Cria o node (Objeto) com seus valores respectivos
-const createNode = (col, row, heuristica, custo) => {
+const createNode = (col, row, heuristica, custo, heuristicaGreen, heuristicaRed, heuristicaBlue) => {
     return {
         col,
         row,
         heuristica,
+        heuristicaGreen,
+        heuristicaRed,
+        heuristicaBlue,
         custo,
+        campo: matriz[row][col],
         isStart: row === START_NODE_ROW && col === START_NODE_COL,
         isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
+        isGreenAmulet: row === GREEN_AMULET_NODE_ROW && col === GREEN_AMULET_NODE_COL,
+        isRedAmulet: row === RED_AMULET_NODE_ROW && col === RED_AMULET_NODE_COL,
+        isBlueAmulet: row === BLUE_AMULET_NODE_ROW && col === BLUE_AMULET_NODE_COL,
         distance: Infinity,
         isVisited: false,
         previousNode: null,
