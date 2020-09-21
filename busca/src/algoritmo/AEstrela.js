@@ -144,3 +144,18 @@ export function getNodesInShortestPathOrder(finishNode) {
     return nodesInShortestPathOrder
 }
 
+export function custoFinal(finishNode) {
+    //Cria um variavel incremental q guarda os custos totais do caminho
+    let custoTotal = 0
+    //Coloca o node objetivo como node atual
+    let currentNode = finishNode
+    while (currentNode !== null) {
+        //Adiciona o node atual no inicio do array de menor caminho a ser seguido
+        custoTotal = custoTotal + currentNode.custo
+        //Coloca o node anterior a expansão salvo como node atual, esse processo se repete ate que não tenha mais node anterior (ate chegar no node inicial)
+        currentNode = currentNode.previousNode
+    }
+    //Retorna array com o menor caminho a ser seguido encontrado pela busca a*
+    return custoTotal
+}
+

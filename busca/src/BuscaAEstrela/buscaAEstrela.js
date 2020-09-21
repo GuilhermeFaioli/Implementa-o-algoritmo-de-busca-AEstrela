@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Node from "./Node/Node"
 import './buscaAEstrela.css'
-import { AEstrela, getNodesInShortestPathOrder } from '../algoritmo/AEstrela';
+import { AEstrela, getNodesInShortestPathOrder, custoFinal } from '../algoritmo/AEstrela';
 
 //Valores referentes a linha e coluna inicial e final, valores de custo por bioma do campo, e a matriz dando numeros referentes ao biomas
 const START_NODE_ROW = 27;
@@ -139,6 +139,7 @@ class BuscaAEstrela extends Component {
         const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
         //Função que ira criar animações no layout
         this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+        document.getElementById("custoTotalTxt").innerHTML="Custo total: "+custoFinal(finishNode)
     }
 
     //View principal
@@ -149,6 +150,8 @@ class BuscaAEstrela extends Component {
                 <button onClick={() => this.visualizeAEstrela()}>
                     Visualize o algoritmo A*
                 </button>
+                <br />
+                <text id="custoTotalTxt"></text>
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
                         return (
