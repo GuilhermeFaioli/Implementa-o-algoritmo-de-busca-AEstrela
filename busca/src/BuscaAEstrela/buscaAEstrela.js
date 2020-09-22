@@ -200,6 +200,120 @@ const calculaCusto = (row, col) => {
 }
 
 const heuristica = (row, col) => {
+    let x0, y0, x1, y1, dx, dy, m, h = 0;
+
+    // Ponto de partida
+    x0 = col;
+    y0 = row;
+
+    // Ponto de destino
+    x1 = FINISH_NODE_COL;
+    y1 = FINISH_NODE_ROW;
+
+    dx = x1 - x0;
+    dy = y1 - y0;
+
+    // alpha: estimativa do custo de cada estado
+    // 11-15: resultado bom
+    let alpha = 15;
+
+    // Iterar sobre linhas
+    if (Math.abs(dx) < Math.abs(dy)) {
+
+        // Linha passa a ser eixo X
+        x0 = row;
+        y0 = col;
+
+        // Linha passa a ser eixo X
+        x1 = FINISH_NODE_ROW;
+        y1 = FINISH_NODE_COL;
+
+        dx = x1 - x0;
+        dy = y1 - y0;
+
+        // pontos na mesma linha
+        if (dx == 0) {
+            if (dy > 0) {
+                for (let y = y0; y < y1; y++) {
+                    h += alpha;
+                }
+            } else {
+                for (let y = y1; y < y0; y++) {
+                    h += alpha;
+                }
+            }
+            // pontos na mesma coluna
+        } else if (dy == 0) {
+            if (dx > 0) {
+                for (let x = x0; x < x1; x++) {
+                    h += alpha;
+                }
+            } else {
+                for (let x = x1; x < x0; x++) {
+                    h += alpha;
+                }
+            }
+        } else {
+            // Pontos nao estao nem na mesma linha e nem na mesma coluna
+            if (dx < 0) {
+                x0 = FINISH_NODE_ROW;
+                y0 = FINISH_NODE_COL;
+
+                x1 = row;
+                y1 = col;
+            }
+
+            m = (y1 - y0) / (x1 - x0);
+            let y = y0;
+            for (let x = x0; x < x1; x++) {
+                h += alpha;
+                y += m;
+            }
+        }
+    } else {
+        // pontos na mesma coluna
+        if (dx == 0) {
+            if (dy > 0) {
+                for (let y = y0; y < y1; y++) {
+                    h += alpha;
+                }
+            } else {
+                for (let y = y1; y < y0; y++) {
+                    h += alpha;
+                }
+            }
+            // pontos na mesma linha
+        } else if (dy == 0) {
+            if (dx > 0) {
+                for (let x = x0; x < x1; x++) {
+                    h += alpha;
+                }
+            } else {
+                for (let x = x1; x < x0; x++) {
+                    h += alpha;
+                }
+            }
+        } else {
+
+            if (dx < 0) {
+                x0 = FINISH_NODE_COL;
+                y0 = FINISH_NODE_ROW;
+
+                x1 = col;
+                y1 = row;
+            }
+
+            m = (y1 - y0) / (x1 - x0);
+            let y = y0;
+            for (let x = x0; x < x1; x++) {
+                h += alpha;
+                y += m;
+            }
+        }
+    }
+
+    return h;
+
     //A heuristica escolhida para esse problema é o numero de casas na matriz ate o objetivo
     let distanciaLinha = 0, distanciaColuna = 0;
     if (row == FINISH_NODE_ROW) {
@@ -217,7 +331,7 @@ const heuristica = (row, col) => {
         distanciaColuna = col - FINISH_NODE_COL;
     }
     //Retorna a quantidade de linhas ate o objetivo + a quantidade de colunas ate o objetivo
-    return distanciaLinha + distanciaColuna;
+    return (distanciaLinha + distanciaColuna) * 10;
 }
 
 //Cria o node (Objeto) com seus valores respectivos
