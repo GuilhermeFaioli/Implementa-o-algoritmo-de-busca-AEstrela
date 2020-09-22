@@ -1,19 +1,22 @@
 
- 
-export function AEstrela(grid, startNode, finishNode, GreenNode, RedNode, BlueNode) {
-    let greenAmulet = false;
-    let redAmulet = false;
-    let blueAmulet = false;
+
+export function AEstrela(grid, startNode, finishNode) {
     //Cria lista de nodes visitados em odem
-    const visitedNodesInOrder = [];
+    const visitedNodesInOrder = []
     //Inicia a distancia do node inicial como 0
     startNode.distance = 0;
     //Coloca todo o grid(matriz de objetos) de node como array, ao invez de matriz, esse array se torna o array de nodes que ainda não foram visitados
     const unvisitedNodes = getAllNodes(grid);
     //Loop enquanto há elementos não visitados, o programa não chega no objetivo ou ele fica preso em algum lugar com distancia infinita
     while (!!unvisitedNodes.length) {
+
+        
+        
         //Ordena os nodes do array não visitado em ordem crescente de distancia(custo + heuristica). Na primeira vez que programa roda o node inicial tem distancia 0 e os demais tem distancia infinita, fazendo com que ele fique em primeiro
-        sortNodesByDistance(unvisitedNodes, greenAmulet, redAmulet, blueAmulet);
+        sortNodesByDistance(unvisitedNodes);
+
+
+        
         //Remove primeiro elemento do array, o elemento com menor distancia(custo + heuristica) espandido ate esse momento
         const closestNode = unvisitedNodes.shift();
         //Loop para caso ele encontre distancia(custo) infinito, isso não é para acontencer, todos os nodes devem ter custo calculado quando a função updateUnvisitedNeighbors é chamada, o primeiro node tem distancia 0
@@ -22,78 +25,15 @@ export function AEstrela(grid, startNode, finishNode, GreenNode, RedNode, BlueNo
         //O node mais proximo com menor distancia(custo + heuristica) é colocado na lista de visitados
         visitedNodesInOrder.push(closestNode);
         //Para o loop caso o node objetivo tenha sido atingido
-        if (closestNode === GreenNode){
-            greenAmulet = true; 
-        }
-        if (closestNode === RedNode){
-            redAmulet = true;
-        }
-        if (closestNode === BlueNode){
-            blueAmulet = true;
-        }
         if (closestNode === finishNode) return visitedNodesInOrder;
         //Atualiza os proximos nos a serem espandidos, dando falor de distancia(custo + heuristica) para eles, e assim no proximo loop eles serão ordenados na frente dos outros nodes em ordem de distancia(custo + heuristica)
         updateUnvisitedNeighbors(closestNode, grid);
     }
 }
 
-function sortNodesByDistance(unvisitedNodes, greenAmulet, redAmulet, blueAmulet) {
-    //Ordena o array em ordem de distancia(custo + heuristica) crescente
-    /*if(greenAmulet === false && redAmulet == false && blueAmulet === false) {
-        unvisitedNodes.sort((nodeA, nodeB) => {
-            let menorValor = nodeA.heuristicaBlue;
-            let objetivoInicial = "amuleto azul";
-            if(menorValor > nodeA.heuristicaGreen) {
-                menorValor = nodeA.heuristicaGreen;
-                objetivoInicial = "amuleto verde";
-            }
-            if(menorValor > nodeA.heuristicaRed){
-                menorValor = nodeA.heuristicaRed;
-                objetivoInicial = "amuleto vermelho";
-            }
-            if(objetivoInicial === "amuleto azul") {
-                return ((nodeA.distance + nodeA.heuristicaBlue) - (nodeB.distance + nodeB.heuristicaBlue))
-            } else if(objetivoInicial === "amuleto verde") {
-                return ((nodeA.distance + nodeA.heuristicaGreen) - (nodeB.distance + nodeB.heuristicaGreen))
-            } else {
-                return ((nodeA.distance + nodeA.heuristicaRed) - (nodeB.distance + nodeB.heuristicaRed))
-            }
-        });
-    } else if(greenAmulet === false && redAmulet === false) {
-        unvisitedNodes.sort((nodeA, nodeB) => {
-            if(nodeA.heuristicaGreen > nodeA.heuristicaRed) {
-                return ((nodeA.distance + nodeA.heuristicaRed) - (nodeB.distance + nodeB.heuristicaRed))
-            } else {
-                return ((nodeA.distance + nodeA.heuristicaGreen) - (nodeB.distance + nodeB.heuristicaGreen))
-            }
-        });
-    } else if(greenAmulet === false && blueAmulet === false) {
-        unvisitedNodes.sort((nodeA, nodeB) => {
-            if(nodeA.heuristicaGreen > nodeA.heuristicaBlue) {
-                return ((nodeA.distance + nodeA.heuristicaBlue) - (nodeB.distance + nodeB.heuristicaBlue))
-            } else {
-                return ((nodeA.distance + nodeA.heuristicaGreen) - (nodeB.distance + nodeB.heuristicaGreen))
-            }
-        });
-    } else if(redAmulet === false && blueAmulet === false) {
-        unvisitedNodes.sort((nodeA, nodeB) => {
-            if(nodeA.heuristicaRed > nodeA.heuristicaBlue) {
-                return ((nodeA.distance + nodeA.heuristicaBlue) - (nodeB.distance + nodeB.heuristicaBlue))
-            } else {
-                return ((nodeA.distance + nodeA.heuristicaRed) - (nodeB.distance + nodeB.heuristicaRed))
-            }
-        });
-    } else if(blueAmulet === false) {
-        unvisitedNodes.sort((nodeA, nodeB) => ((nodeA.distance + nodeA.heuristicaBlue) - (nodeB.distance + nodeB.heuristicaBlue)));
-    } else if(redAmulet === false) {
-        unvisitedNodes.sort((nodeA, nodeB) => ((nodeA.distance + nodeA.heuristicaRed) - (nodeB.distance + nodeB.heuristicaRed)));
-    } else if(greenAmulet === false) {
-        unvisitedNodes.sort((nodeA, nodeB) => ((nodeA.distance + nodeA.heuristicaGreen) - (nodeB.distance + nodeB.heuristicaGreen)));
-    } else {
-        unvisitedNodes.sort((nodeA, nodeB) => (nodeA.distance + nodeA.heuristica) - (nodeB.distance + nodeB.heuristica));
-    }*/
+function sortNodesByDistance(unvisitedNodes) {
     unvisitedNodes.sort((nodeA, nodeB) => (nodeA.distance + nodeA.heuristica) - (nodeB.distance + nodeB.heuristica));
-  }
+}
 
 function updateUnvisitedNeighbors(node, grid) {
     //Função que verifica se os proximos nodes podem ser expandidos (são validos) e filtra os nodes que ja foram visitados, apos isso retorna esses nodes

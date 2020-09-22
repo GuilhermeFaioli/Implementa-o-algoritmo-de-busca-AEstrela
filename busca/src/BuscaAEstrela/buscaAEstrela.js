@@ -133,12 +133,92 @@ class BuscaAEstrela extends Component {
         const BlueNode = grid[BLUE_AMULET_NODE_ROW][BLUE_AMULET_NODE_COL];
         //Node amuleto Vermelho
         const RedNode = grid[RED_AMULET_NODE_ROW][RED_AMULET_NODE_COL];
-        //Inicia a busca a* e recebe os nodes visitados(todos nodes expandidos) em ordem ate o objetivo
-        const visitedNodesInOrder = AEstrela(grid, startNode, finishNode, GreenNode, RedNode, BlueNode);
+        let visitedNodesInOrder
         //Recebe o menor caminho achado na busca
-        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        let nodesInShortestPathOrder
         //Função que ira criar animações no layout
-        this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+        //Inicia a busca a* e recebe os nodes visitados(todos nodes expandidos) em ordem ate o objetivo
+        if(heuristicaGreen(START_NODE_ROW, START_NODE_COL) < heuristicaBlue(START_NODE_ROW, START_NODE_COL) && heuristicaGreen(START_NODE_ROW, START_NODE_COL) < heuristicaRed(START_NODE_ROW, START_NODE_COL)) {
+            visitedNodesInOrder = AEstrela(grid, startNode, GreenNode)
+            nodesInShortestPathOrder = getNodesInShortestPathOrder(GreenNode);
+            this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+            if(heuristicaBlue(GREEN_AMULET_NODE_ROW, GREEN_AMULET_NODE_COL) < heuristicaRed(GREEN_AMULET_NODE_ROW, GREEN_AMULET_NODE_COL)) {
+                visitedNodesInOrder = AEstrela(grid, GreenNode, BlueNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(BlueNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, BlueNode, RedNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(RedNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, RedNode, finishNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+
+            } else {
+                visitedNodesInOrder = AEstrela(grid, GreenNode, RedNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(RedNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, RedNode, BlueNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(BlueNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, BlueNode, finishNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+            }
+        } else if(heuristicaBlue(START_NODE_ROW, START_NODE_COL) < heuristicaGreen(START_NODE_ROW, START_NODE_COL) && heuristicaBlue(START_NODE_ROW, START_NODE_COL) < heuristicaRed(START_NODE_ROW, START_NODE_COL)){
+            visitedNodesInOrder = AEstrela(grid, startNode, BlueNode)
+            nodesInShortestPathOrder = getNodesInShortestPathOrder(BlueNode);
+            this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+            if(heuristicaGreen(BLUE_AMULET_NODE_ROW, BLUE_AMULET_NODE_COL) < heuristicaRed(BLUE_AMULET_NODE_ROW, BLUE_AMULET_NODE_COL)) {
+                visitedNodesInOrder = AEstrela(grid, BlueNode, GreenNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(GreenNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, GreenNode, RedNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(RedNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, RedNode, finishNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+
+            } else {
+                visitedNodesInOrder = AEstrela(grid, BlueNode, RedNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(RedNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, RedNode, GreenNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(GreenNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, GreenNode, finishNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+            }
+        } else if(heuristicaRed(START_NODE_ROW, START_NODE_COL) < heuristicaGreen(START_NODE_ROW, START_NODE_COL) && heuristicaRed(START_NODE_ROW, START_NODE_COL) < heuristicaBlue(START_NODE_ROW, START_NODE_COL)){
+            visitedNodesInOrder = AEstrela(grid, startNode, RedNode)
+            nodesInShortestPathOrder = getNodesInShortestPathOrder(RedNode);
+            this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+            if(heuristicaGreen(RED_AMULET_NODE_ROW, RED_AMULET_NODE_COL) < heuristicaBlue(RED_AMULET_NODE_ROW, RED_AMULET_NODE_COL)) {
+                visitedNodesInOrder = AEstrela(grid, RedNode, GreenNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(GreenNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, GreenNode, BlueNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(BlueNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, BlueNode, finishNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+
+            } else {
+                visitedNodesInOrder = AEstrela(grid, RedNode, BlueNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(BlueNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, BlueNode, GreenNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(GreenNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                visitedNodesInOrder = AEstrela(grid, GreenNode, finishNode)
+                nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+            }
+        }
+        
+        
         document.getElementById("custoTotalTxt").innerHTML="Custo total: "+custoFinal(finishNode)
     }
 
@@ -194,7 +274,7 @@ const getInitialGrid = () => {
         const currentRow = []
         for (let col = 0; col < 42; col++) {
             //Chama funções necessarias para criar cada node
-            currentRow.push(createNode(col, row, heuristica(row, col), calculaCusto(row, col), heuristica(GREEN_AMULET_NODE_ROW, GREEN_AMULET_NODE_COL), heuristica(RED_AMULET_NODE_ROW, RED_AMULET_NODE_COL), heuristica(BLUE_AMULET_NODE_ROW, BLUE_AMULET_NODE_COL)))
+            currentRow.push(createNode(col, row, heuristica(row, col), calculaCusto(row, col), heuristicaGreen(row, col), heuristicaRed(row, col), heuristicaBlue(row, col)))
         }
         grid.push(currentRow);
     }
@@ -332,25 +412,354 @@ const heuristica = (row, col) => {
     }
 
     return h;
+}
 
-    //A heuristica escolhida para esse problema é o numero de casas na matriz ate o objetivo
-    let distanciaLinha = 0, distanciaColuna = 0;
-    if (row === FINISH_NODE_ROW) {
-        distanciaLinha = 0;
-    } else if (row < FINISH_NODE_ROW) {
-        distanciaLinha = FINISH_NODE_ROW - row;
-    } else if (row > FINISH_NODE_ROW) {
-        distanciaLinha = row - FINISH_NODE_ROW;
+const heuristicaGreen = (row, col) => {
+    let x0, y0, x1, y1, dx, dy, m, h = 0;
+
+    // Ponto de partida
+    x0 = col;
+    y0 = row;
+
+    // Ponto de destino
+    x1 = GREEN_AMULET_NODE_COL;
+    y1 = GREEN_AMULET_NODE_ROW;
+
+    dx = x1 - x0;
+    dy = y1 - y0;
+
+    // alpha: estimativa do custo de cada estado
+    // 11-15: resultado bom
+    let alpha = 15;
+
+    // Iterar sobre linhas
+    if (Math.abs(dx) < Math.abs(dy)) {
+
+        // Linha passa a ser eixo X
+        x0 = row;
+        y0 = col;
+
+        // Linha passa a ser eixo X
+        x1 = GREEN_AMULET_NODE_ROW;
+        y1 = GREEN_AMULET_NODE_COL;
+
+        dx = x1 - x0;
+        dy = y1 - y0;
+
+        // pontos na mesma linha
+        if (dx == 0) {
+            if (dy > 0) {
+                for (let y = y0; y < y1; y++) {
+                    h += alpha;
+                }
+            } else {
+                for (let y = y1; y < y0; y++) {
+                    h += alpha;
+                }
+            }
+            // pontos na mesma coluna
+        } else if (dy == 0) {
+            if (dx > 0) {
+                for (let x = x0; x < x1; x++) {
+                    h += alpha;
+                }
+            } else {
+                for (let x = x1; x < x0; x++) {
+                    h += alpha;
+                }
+            }
+        } else {
+            // Pontos nao estao nem na mesma linha e nem na mesma coluna
+            if (dx < 0) {
+                x0 = GREEN_AMULET_NODE_ROW;
+                y0 = GREEN_AMULET_NODE_COL;
+
+                x1 = row;
+                y1 = col;
+            }
+
+            m = (y1 - y0) / (x1 - x0);
+            let y = y0;
+            for (let x = x0; x < x1; x++) {
+                h += alpha;
+                y += m;
+            }
+        }
+    } else {
+        // pontos na mesma coluna
+        if (dx == 0) {
+            if (dy > 0) {
+                for (let y = y0; y < y1; y++) {
+                    h += alpha;
+                }
+            } else {
+                for (let y = y1; y < y0; y++) {
+                    h += alpha;
+                }
+            }
+            // pontos na mesma linha
+        } else if (dy == 0) {
+            if (dx > 0) {
+                for (let x = x0; x < x1; x++) {
+                    h += alpha;
+                }
+            } else {
+                for (let x = x1; x < x0; x++) {
+                    h += alpha;
+                }
+            }
+        } else {
+
+            if (dx < 0) {
+                x0 = GREEN_AMULET_NODE_COL;
+                y0 = GREEN_AMULET_NODE_ROW;
+
+                x1 = col;
+                y1 = row;
+            }
+
+            m = (y1 - y0) / (x1 - x0);
+            let y = y0;
+            for (let x = x0; x < x1; x++) {
+                h += alpha;
+                y += m;
+            }
+        }
     }
-    if (col === FINISH_NODE_COL) {
-        distanciaColuna = 0;
-    } else if (col < FINISH_NODE_COL) {
-        distanciaColuna = FINISH_NODE_COL - col;
-    } else if (col > FINISH_NODE_COL) {
-        distanciaColuna = col - FINISH_NODE_COL;
+
+    return h;
+}
+
+const heuristicaRed = (row, col) => {
+    let x0, y0, x1, y1, dx, dy, m, h = 0;
+
+    // Ponto de partida
+    x0 = col;
+    y0 = row;
+
+    // Ponto de destino
+    x1 = RED_AMULET_NODE_COL;
+    y1 = RED_AMULET_NODE_ROW;
+
+    dx = x1 - x0;
+    dy = y1 - y0;
+
+    // alpha: estimativa do custo de cada estado
+    // 11-15: resultado bom
+    let alpha = 15;
+
+    // Iterar sobre linhas
+    if (Math.abs(dx) < Math.abs(dy)) {
+
+        // Linha passa a ser eixo X
+        x0 = row;
+        y0 = col;
+
+        // Linha passa a ser eixo X
+        x1 = RED_AMULET_NODE_ROW;
+        y1 = RED_AMULET_NODE_COL;
+
+        dx = x1 - x0;
+        dy = y1 - y0;
+
+        // pontos na mesma linha
+        if (dx == 0) {
+            if (dy > 0) {
+                for (let y = y0; y < y1; y++) {
+                    h += alpha;
+                }
+            } else {
+                for (let y = y1; y < y0; y++) {
+                    h += alpha;
+                }
+            }
+            // pontos na mesma coluna
+        } else if (dy == 0) {
+            if (dx > 0) {
+                for (let x = x0; x < x1; x++) {
+                    h += alpha;
+                }
+            } else {
+                for (let x = x1; x < x0; x++) {
+                    h += alpha;
+                }
+            }
+        } else {
+            // Pontos nao estao nem na mesma linha e nem na mesma coluna
+            if (dx < 0) {
+                x0 = RED_AMULET_NODE_ROW;
+                y0 = RED_AMULET_NODE_COL;
+
+                x1 = row;
+                y1 = col;
+            }
+
+            m = (y1 - y0) / (x1 - x0);
+            let y = y0;
+            for (let x = x0; x < x1; x++) {
+                h += alpha;
+                y += m;
+            }
+        }
+    } else {
+        // pontos na mesma coluna
+        if (dx == 0) {
+            if (dy > 0) {
+                for (let y = y0; y < y1; y++) {
+                    h += alpha;
+                }
+            } else {
+                for (let y = y1; y < y0; y++) {
+                    h += alpha;
+                }
+            }
+            // pontos na mesma linha
+        } else if (dy == 0) {
+            if (dx > 0) {
+                for (let x = x0; x < x1; x++) {
+                    h += alpha;
+                }
+            } else {
+                for (let x = x1; x < x0; x++) {
+                    h += alpha;
+                }
+            }
+        } else {
+
+            if (dx < 0) {
+                x0 = RED_AMULET_NODE_COL;
+                y0 = RED_AMULET_NODE_ROW;
+
+                x1 = col;
+                y1 = row;
+            }
+
+            m = (y1 - y0) / (x1 - x0);
+            let y = y0;
+            for (let x = x0; x < x1; x++) {
+                h += alpha;
+                y += m;
+            }
+        }
     }
-    //Retorna a quantidade de linhas ate o objetivo + a quantidade de colunas ate o objetivo
-    return (distanciaLinha + distanciaColuna) * 10;
+
+    return h;
+}
+
+const heuristicaBlue = (row, col) => {
+    let x0, y0, x1, y1, dx, dy, m, h = 0;
+
+    // Ponto de partida
+    x0 = col;
+    y0 = row;
+
+    // Ponto de destino
+    x1 = BLUE_AMULET_NODE_COL;
+    y1 = BLUE_AMULET_NODE_ROW;
+
+    dx = x1 - x0;
+    dy = y1 - y0;
+
+    // alpha: estimativa do custo de cada estado
+    // 11-15: resultado bom
+    let alpha = 15;
+
+    // Iterar sobre linhas
+    if (Math.abs(dx) < Math.abs(dy)) {
+
+        // Linha passa a ser eixo X
+        x0 = row;
+        y0 = col;
+
+        // Linha passa a ser eixo X
+        x1 = BLUE_AMULET_NODE_ROW;
+        y1 = BLUE_AMULET_NODE_COL;
+
+        dx = x1 - x0;
+        dy = y1 - y0;
+
+        // pontos na mesma linha
+        if (dx == 0) {
+            if (dy > 0) {
+                for (let y = y0; y < y1; y++) {
+                    h += alpha;
+                }
+            } else {
+                for (let y = y1; y < y0; y++) {
+                    h += alpha;
+                }
+            }
+            // pontos na mesma coluna
+        } else if (dy == 0) {
+            if (dx > 0) {
+                for (let x = x0; x < x1; x++) {
+                    h += alpha;
+                }
+            } else {
+                for (let x = x1; x < x0; x++) {
+                    h += alpha;
+                }
+            }
+        } else {
+            // Pontos nao estao nem na mesma linha e nem na mesma coluna
+            if (dx < 0) {
+                x0 = BLUE_AMULET_NODE_ROW;
+                y0 = BLUE_AMULET_NODE_COL;
+
+                x1 = row;
+                y1 = col;
+            }
+
+            m = (y1 - y0) / (x1 - x0);
+            let y = y0;
+            for (let x = x0; x < x1; x++) {
+                h += alpha;
+                y += m;
+            }
+        }
+    } else {
+        // pontos na mesma coluna
+        if (dx == 0) {
+            if (dy > 0) {
+                for (let y = y0; y < y1; y++) {
+                    h += alpha;
+                }
+            } else {
+                for (let y = y1; y < y0; y++) {
+                    h += alpha;
+                }
+            }
+            // pontos na mesma linha
+        } else if (dy == 0) {
+            if (dx > 0) {
+                for (let x = x0; x < x1; x++) {
+                    h += alpha;
+                }
+            } else {
+                for (let x = x1; x < x0; x++) {
+                    h += alpha;
+                }
+            }
+        } else {
+
+            if (dx < 0) {
+                x0 = BLUE_AMULET_NODE_COL;
+                y0 = BLUE_AMULET_NODE_ROW;
+
+                x1 = col;
+                y1 = row;
+            }
+
+            m = (y1 - y0) / (x1 - x0);
+            let y = y0;
+            for (let x = x0; x < x1; x++) {
+                h += alpha;
+                y += m;
+            }
+        }
+    }
+
+    return h;
 }
 
 //Cria o node (Objeto) com seus valores respectivos
