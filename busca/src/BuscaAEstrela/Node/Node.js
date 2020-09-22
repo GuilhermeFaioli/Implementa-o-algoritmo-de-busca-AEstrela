@@ -11,12 +11,27 @@ export default class Node extends Component {
             isStart,
             onMouseUp,
             row,
+            isGreenAmulet,
+            isRedAmulet,
+            isBlueAmulet,
+            campo,
         } = this.props
-        const extraClassName = isFinish
+        let extraClassName = isFinish
             ? 'node-finish'
-            : isStart
-            ? 'node-start'
-            : ''
+                : isStart
+                ? 'node-start'
+                    : isGreenAmulet
+                    ? 'green-node'
+                        : isBlueAmulet
+                        ? 'blue-node'
+                            : isRedAmulet
+                            ? 'red-node'
+                                : campo === 1 ? 'campo-grama'
+                                    : campo === 2 ? 'campo-areia'
+                                        : campo === 3 ? 'campo-floresta'
+                                            : campo === 4 ? 'campo-montanha'
+                                                : campo === 5 ? 'campo-agua'
+                                                    : ''
         //Cria o grid com base nos objetos recebidos
         return (
             <div

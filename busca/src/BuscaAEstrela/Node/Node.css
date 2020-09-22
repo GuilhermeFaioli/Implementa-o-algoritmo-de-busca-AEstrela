@@ -4,15 +4,47 @@
     outline: 1px solid rgb(175, 216, 248);
     display: inline-block;
   }
+
+  .campo-grama {
+    background-color: #64cf44;
+  }
+
+  .campo-areia {
+    background-color: #c4cf76;
+  }
+
+  .campo-floresta {
+    background-color: #065207;
+  }
+
+  .campo-montanha {
+    background-color: #5e4429;
+  }
+
+  .campo-agua {
+    background-color: #0046de;
+  }
   
   .node-finish {
-    background-color: red;
+    background-color: orange;
   }
   
   .node-start {
+    background-color: purple;
+  }
+
+  .green-node {
     background-color: green;
   }
-  
+
+  .blue-node {
+    background-color: blue;
+  }
+
+  .red-node {
+    background-color: red;
+  }
+
   .node-visited {
     animation-name: visitedAnimation;
     animation-duration: 1.5s;
