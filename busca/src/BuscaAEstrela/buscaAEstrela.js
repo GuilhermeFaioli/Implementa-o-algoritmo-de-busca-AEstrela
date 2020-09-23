@@ -94,11 +94,11 @@ class BuscaAEstrela extends Component {
     }
 
     //Função que ira criar animações no layout
-    animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder) {
+    animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, numbers) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
             if (i === visitedNodesInOrder.length) {
                 setTimeout(() => {
-                    this.animateShortestPath(nodesInShortestPathOrder);
+                    this.animateShortestPath(nodesInShortestPathOrder, numbers);
                 }, 10 * i);
                 return;
             }
@@ -111,13 +111,33 @@ class BuscaAEstrela extends Component {
     }
 
     //Função que ira criar animações do menor caminho
-    animateShortestPath(nodesInShortestPathOrder) {
-        for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-            setTimeout(() => {
-                const node = nodesInShortestPathOrder[i];
-                document.getElementById(`node-${node.row}-${node.col}`).className =
-                    'node node-shortest-path'
-            }, 50 * i);
+    animateShortestPath(nodesInShortestPathOrder, numbers) {
+            let count = -1
+            let number = 0
+            for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+                setTimeout(() => {
+                    const node = nodesInShortestPathOrder[i];
+                    number = numbers[count]
+                    if(node.row === START_NODE_ROW && node.col === START_NODE_COL) {
+                        number = numbers[count]
+                        count++
+                    }
+                    switch(number) {
+                        case 1:
+                            document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path'
+                            break
+                        case 2:
+                            document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path1'
+                            break
+                        case 3:
+                            document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path2'
+                            break
+                        case 4:
+                            document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path3'
+                            break
+                    }
+                }, 50 * i);
+            
         }
     }
 
@@ -136,20 +156,23 @@ class BuscaAEstrela extends Component {
         let visitedNodesInOrder;
         //Recebe o menor caminho achado na busca
         let nodesInShortestPathOrder;
-        
+        const colorArray = [];
         if ((startNode.heuristicaGreen < startNode.heuristicaRed) && (startNode.heuristicaGreen < startNode.heuristicaBlue)) {
             visitedNodesInOrder = AEstrela(grid, startNode, GreenNode, 'green');
             nodesInShortestPathOrder = getNodesInShortestPathOrder(GreenNode);
+            colorArray.push(2)
 
             if (GreenNode.heuristicaRed < GreenNode.heuristicaBlue) {
-                console.log('teste');
                 visitedNodesInOrder = visitedNodesInOrder.concat(AEstrela(grid, GreenNode, RedNode, 'red'));
                 nodesInShortestPathOrder = nodesInShortestPathOrder.concat(getNodesInShortestPathOrder(RedNode));
+                colorArray.push(4)
                 visitedNodesInOrder = visitedNodesInOrder.concat(AEstrela(grid, RedNode, BlueNode, 'blue'));
                 nodesInShortestPathOrder = nodesInShortestPathOrder.concat(getNodesInShortestPathOrder(BlueNode));
+                colorArray.push(3)
                 visitedNodesInOrder = visitedNodesInOrder.concat(AEstrela(grid, BlueNode, finishNode, 'finish'));
                 nodesInShortestPathOrder = nodesInShortestPathOrder.concat(getNodesInShortestPathOrder(finishNode));
-                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
+                colorArray.push(1)
+                this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, colorArray);
             }
         }
 
