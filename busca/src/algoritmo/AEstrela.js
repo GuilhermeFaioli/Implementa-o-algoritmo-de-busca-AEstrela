@@ -1,6 +1,4 @@
-
-
-export function AEstrela(grid, startNode, finishNode) {
+export function AEstrela(grid, startNode, finishNode, finish) {
     //Cria lista de nodes visitados em odem
     const visitedNodesInOrder = []
     //Inicia a distancia do node inicial como 0
@@ -9,13 +7,9 @@ export function AEstrela(grid, startNode, finishNode) {
     const unvisitedNodes = getAllNodes(grid);
     //Loop enquanto há elementos não visitados, o programa não chega no objetivo ou ele fica preso em algum lugar com distancia infinita
     while (!!unvisitedNodes.length) {
-
-        
         
         //Ordena os nodes do array não visitado em ordem crescente de distancia(custo + heuristica). Na primeira vez que programa roda o node inicial tem distancia 0 e os demais tem distancia infinita, fazendo com que ele fique em primeiro
-        sortNodesByDistance(unvisitedNodes);
-
-
+        sortNodesByDistance(unvisitedNodes, finish);
         
         //Remove primeiro elemento do array, o elemento com menor distancia(custo + heuristica) espandido ate esse momento
         const closestNode = unvisitedNodes.shift();
@@ -26,13 +20,18 @@ export function AEstrela(grid, startNode, finishNode) {
         visitedNodesInOrder.push(closestNode);
         //Para o loop caso o node objetivo tenha sido atingido
         if (closestNode === finishNode) return visitedNodesInOrder;
-        //Atualiza os proximos nos a serem espandidos, dando falor de distancia(custo + heuristica) para eles, e assim no proximo loop eles serão ordenados na frente dos outros nodes em ordem de distancia(custo + heuristica)
+        //Atualiza os proximos nos a serem expandidos, dando valor de distancia(custo + heuristica) para eles, e assim no proximo loop eles serão ordenados na frente dos outros nodes em ordem de distancia(custo + heuristica)
         updateUnvisitedNeighbors(closestNode, grid);
     }
 }
 
-function sortNodesByDistance(unvisitedNodes) {
-    unvisitedNodes.sort((nodeA, nodeB) => (nodeA.distance + nodeA.heuristica) - (nodeB.distance + nodeB.heuristica));
+function sortNodesByDistance(unvisitedNodes, finish) {
+    switch (finish) {
+        case 'finish': unvisitedNodes.sort((nodeA, nodeB) => (nodeA.distance + nodeA.heuristica) - (nodeB.distance + nodeB.heuristica)); break;
+        case 'green': unvisitedNodes.sort((nodeA, nodeB) => (nodeA.distance + nodeA.heuristicaGreen) - (nodeB.distance + nodeB.heuristicaGreen)); break;
+        case 'red': unvisitedNodes.sort((nodeA, nodeB) => (nodeA.distance + nodeA.heuristicaRed) - (nodeB.distance + nodeB.heuristicaRed)); break;
+        case 'blue': unvisitedNodes.sort((nodeA, nodeB) => (nodeA.distance + nodeA.heuristicaBlue) - (nodeB.distance + nodeB.heuristicaBlue)); break;
+    }  
 }
 
 function updateUnvisitedNeighbors(node, grid) {
