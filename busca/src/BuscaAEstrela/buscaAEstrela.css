@@ -22,7 +22,7 @@
 .AmuletoVerde {
     width: 15px;
     height: 15px;
-    background-color: green;
+    background-color: rgb(123, 250, 64);
     display: inline-block;
 }
 
@@ -37,5 +37,5 @@
     width: 15px;
     height: 15px;
     display: inline-block;
-    background-color: red;
+    background-color: rgb(253, 16, 16);
 }

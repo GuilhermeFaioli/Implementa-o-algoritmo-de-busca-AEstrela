@@ -183,6 +183,7 @@ class BuscaAEstrela extends Component {
         let costs = [];
         // Ordem dos nós objetivos
         let order;
+        let custo = 0
 
         costs.push(startNode.heuristicaGreen + GreenNode.heuristicaRed + RedNode.heuristicaBlue + BlueNode.heuristica);
         costs.push(startNode.heuristicaGreen + GreenNode.heuristicaBlue + BlueNode.heuristicaRed + RedNode.heuristica);
@@ -216,8 +217,8 @@ class BuscaAEstrela extends Component {
                 case finishNode: finish = 'finish'; break;
             }
 
-            const [visited, shortestPath] = AEstrela(grid, start, dest, finish);
-            
+            const [visited, shortestPath, custoAux] = AEstrela(grid, start, dest, finish);
+            custo = custo + custoAux
             for (const v of visited) {
                 visitedNodesInOrder.push(v);
             }
@@ -228,8 +229,8 @@ class BuscaAEstrela extends Component {
 
         this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, colorArray);
 
-        // let custoTotal = custoFinal(finishNode) + custoFinal(RedNode) + custoFinal(BlueNode) + custoFinal(GreenNode);
-        // document.getElementById("custoTotalTxt").innerHTML = "Custo total: " + custoFinal(custoTotal);
+        let custoTotal = custo - startNode.custo
+        document.getElementById("custoTotalTxt").innerHTML = "Custo total: " + custoTotal;
     }
 
     //View principal
