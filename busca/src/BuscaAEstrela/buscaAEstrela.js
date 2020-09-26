@@ -161,22 +161,59 @@ class BuscaAEstrela extends Component {
         //Node amuleto Vermelho
         const RedNode = grid[RED_AMULET_NODE_ROW][RED_AMULET_NODE_COL];
         // Nós visitados
-        let visitedNodesInOrder = new Array(4);
+        let visitedNodesInOrder = [];
         //Recebe o menor caminho achado na busca
-        let nodesInShortestPathOrder =  new Array(4);
-        const colorArray = [];
+        let nodesInShortestPathOrder = [];
 
-        if ((startNode.heuristicaGreen < startNode.heuristicaRed) && (startNode.heuristicaGreen < startNode.heuristicaBlue)) {
+        // Custo de cada caminho
+        let costs = [];
+        // Ordem dos nós objetivos
+        let order;
+
+        costs.push(startNode.heuristicaGreen + GreenNode.heuristicaRed + RedNode.heuristicaBlue + BlueNode.heuristica);
+        costs.push(startNode.heuristicaGreen + GreenNode.heuristicaBlue + BlueNode.heuristicaRed + RedNode.heuristica);
+        costs.push(startNode.heuristicaRed + RedNode.heuristicaGreen + GreenNode.heuristicaBlue + BlueNode.heuristica);
+        costs.push(startNode.heuristicaRed + RedNode.heuristicaBlue + BlueNode.heuristicaGreen + GreenNode.heuristica);
+        costs.push(startNode.heuristicaBlue + BlueNode.heuristicaRed + RedNode.heuristicaGreen + GreenNode.heuristica);
+        costs.push(startNode.heuristicaBlue + BlueNode.heuristicaGreen + GreenNode.heuristicaRed + RedNode.heuristica);
+
+        // Indice do menor custo
+        const i = costs.indexOf(Math.min.apply(null, costs));
+
+        switch (i) {
+            case 0: order = [startNode, GreenNode, RedNode, BlueNode, finishNode]; break;
+            case 1: order = [startNode, GreenNode, BlueNode, RedNode, finishNode]; break;
+            case 2: order = [startNode, RedNode, GreenNode, BlueNode, finishNode]; break;
+            case 3: order = [startNode, RedNode, BlueNode, GreenNode, finishNode]; break;
+            case 4: order = [startNode, BlueNode, RedNode, GreenNode, finishNode]; break;
+            case 5: order = [startNode, BlueNode, GreenNode, RedNode, finishNode]; break;
+        }
+
+        while (order.length > 1) {
+
+            const start = order.shift();
+            const dest = order[0];
+            let finish;
+
+            switch (dest) {
+                case GreenNode: finish = 'green'; break;
+                case RedNode: finish = 'red'; break;
+                case BlueNode: finish = 'blue'; break;
+                case finishNode: finish = 'finish'; break;
+            }
+
+            const [visited, shortestPath] = AEstrela(grid, start, dest, finish);
             
-            [ visitedNodesInOrder[0], nodesInShortestPathOrder[0] ] = AEstrela(grid, startNode, GreenNode, 'green');
-            if (GreenNode.heuristicaRed < GreenNode.heuristicaBlue) {
-                [ visitedNodesInOrder[1], nodesInShortestPathOrder[1] ] = AEstrela(grid, GreenNode, RedNode, 'red');
-                [ visitedNodesInOrder[2], nodesInShortestPathOrder[2] ] = AEstrela(grid, RedNode, BlueNode, 'blue');
-                [ visitedNodesInOrder[3], nodesInShortestPathOrder[3] ] = AEstrela(grid, BlueNode, finishNode, 'finish'); 
-                // Converte Array 2D para Array 1D e chama a função de animação
-                this.animateAEstrela([].concat(...visitedNodesInOrder), [].concat(...nodesInShortestPathOrder));
+            for (const v of visited) {
+                visitedNodesInOrder.push(v);
+            }
+                    
+            for (const sP of shortestPath) {
+                nodesInShortestPathOrder.push(sP);
             }
         }
+
+        this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder);
 
         // let custoTotal = custoFinal(finishNode) + custoFinal(RedNode) + custoFinal(BlueNode) + custoFinal(GreenNode);
         // document.getElementById("custoTotalTxt").innerHTML = "Custo total: " + custoFinal(custoTotal);
@@ -328,20 +365,20 @@ const getInitialGrid = () => {
         const currentRow = []
         for (let col = 0; col < 42; col++) {
             //Chama funções necessarias para criar cada node
-            currentRow.push(createNode(col, row, 
-                                       heuristica(row, col, FINISH_NODE_ROW, FINISH_NODE_COL),
-                                       calculaCusto(row, col),
-                                       heuristica(row, col, GREEN_AMULET_NODE_ROW, GREEN_AMULET_NODE_COL),
-                                       heuristica(row, col, RED_AMULET_NODE_ROW, RED_AMULET_NODE_COL),
-                                       heuristica(row, col, BLUE_AMULET_NODE_ROW, BLUE_AMULET_NODE_COL),
-                                       matriz[row][col]))
+            currentRow.push(createNode(col, row,
+                heuristica(row, col, FINISH_NODE_ROW, FINISH_NODE_COL),
+                calculaCusto(row, col),
+                heuristica(row, col, GREEN_AMULET_NODE_ROW, GREEN_AMULET_NODE_COL),
+                heuristica(row, col, RED_AMULET_NODE_ROW, RED_AMULET_NODE_COL),
+                heuristica(row, col, BLUE_AMULET_NODE_ROW, BLUE_AMULET_NODE_COL),
+                matriz[row][col]))
         }
         grid.push(currentRow);
     }
     return grid;
 }
 
-export function calculaCusto(row, col){
+export function calculaCusto(row, col) {
     //Calculo do custo com base nos numeros da matriz e o valor de custo de cada bioma
     if (matriz[row][col] === 1) {
         return grama
@@ -359,7 +396,7 @@ export function calculaCusto(row, col){
 }
 
 const heuristica = (row, col, finish_row, finish_col) => {
-    return Math.sqrt(Math.pow(finish_row - row, 2) + Math.pow((finish_col - col), 2))*19;
+    return Math.sqrt(Math.pow(finish_row - row, 2) + Math.pow((finish_col - col), 2)) * 19;
 }
 
 //Cria o node (Objeto) com seus valores respectivos
