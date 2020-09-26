@@ -240,6 +240,9 @@ class BuscaAEstrela extends Component {
                 <button onClick={() => this.visualizeAEstrela()}>
                     Visualize o algoritmo A*
                 </button>
+                <button onClick={() => window.location.reload()}>
+                    Limpar campo
+                </button>
                 <br />
                 <label id="custoTotalTxt"></label>
                 <br />
