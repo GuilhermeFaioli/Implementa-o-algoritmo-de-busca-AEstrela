@@ -434,6 +434,17 @@ class BuscaAEstrela extends Component {
                     <option value="40">41</option>
                     <option value="41">42</option>
                 </select>
+                <br />
+                <label>Legenda:</label>
+                <br />
+                
+                <div className="Inicio"></div> <label>Link</label> <br />
+                <div className="Fim"></div> <label>Master Sword</label> <br />
+                <div className="AmuletoVerde"></div> <label>Amuleto Verde</label> <br />
+                <div className="AmuletoAzul"></div> <label>Amuleto Azul</label> <br />
+                <div className="AmuletoVermelho"></div> <label>Amuleto Vermelho</label> <br />
+                
+                
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
                         return (

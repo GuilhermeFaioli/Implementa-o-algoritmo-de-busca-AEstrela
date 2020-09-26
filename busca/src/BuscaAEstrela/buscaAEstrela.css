@@ -2,3 +2,40 @@
     margin-top: 10px;
     margin-left: 15%;
 }
+
+
+
+.Inicio {
+    background-color: purple;
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
+.Fim {
+    width: 15px;
+    height: 15px;
+    background-color: orange;
+    display: inline-block;
+}
+
+.AmuletoVerde {
+    width: 15px;
+    height: 15px;
+    background-color: green;
+    display: inline-block;
+}
+
+.AmuletoAzul {
+    width: 15px;
+    height: 15px;
+    background-color: blue;
+    display: inline-block;
+}
+
+.AmuletoVermelho {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    background-color: red;
+}
