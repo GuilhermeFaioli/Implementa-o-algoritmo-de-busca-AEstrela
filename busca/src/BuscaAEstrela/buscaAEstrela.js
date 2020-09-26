@@ -12,8 +12,8 @@ const RED_AMULET_NODE_ROW = 1;
 const RED_AMULET_NODE_COL = 24;
 const BLUE_AMULET_NODE_ROW = 17;
 const BLUE_AMULET_NODE_COL = 39;
-const FINISH_NODE_ROW = 1;
-const FINISH_NODE_COL = 2;
+let FINISH_NODE_ROW = 1;
+let FINISH_NODE_COL = 2;
 const grama = 10;
 const areia = 20;
 const floresta = 100;
@@ -111,46 +111,62 @@ class BuscaAEstrela extends Component {
     }
 
     //Função que ira criar animações do menor caminho
-    animateShortestPath(nodesInShortestPathOrder) {
+    animateShortestPath(nodesInShortestPathOrder, numbers) {
         let count = -1
-        let number = 1
-        for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-            setTimeout(() => {
-                const node = nodesInShortestPathOrder[i];
-                // number = numbers[count]
-                // if (node.row === START_NODE_ROW && node.col === START_NODE_COL) {
-                //     number = numbers[count]
-                //     count++
-                // }
-                switch (number) {
-                    case 1:
-                        document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path'
-                        break
-                    case 2:
-                        document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path1'
-                        break
-                    case 3:
-                        document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path2'
-                        break
-                    case 4:
-                        document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path3'
-                        break
-                }
-            }, 50 * i);
+        
+        for (let i = 0; i < numbers.length; i++) {
+            let number = numbers[i]
 
+            for (let j = 0; j < nodesInShortestPathOrder[i].length; j++) {
+                setTimeout(() => {
+                    const node = nodesInShortestPathOrder[i][j];
+                    // number = numbers[count]
+                    // if (node.row === START_NODE_ROW && node.col === START_NODE_COL) {
+                    //     number = numbers[count]
+                    //     count++
+                    // }
+                    switch (number) {
+                        case 1:
+                            document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path'
+                            break
+                        case 2:
+                            document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-pathGreen'
+                            break
+                        case 3:
+                            document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-pathBlue'
+                            break
+                        case 4:
+                            document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-pathRed'
+                            break
+                    }
+                }, 50 * (count));
+                count++
+            }
         }
     }
 
     visualizeAEstrela() {
         const { grid } = this.state;
         //Node inicial
-
+        const aux1 = START_NODE_ROW
+        const aux2 = START_NODE_COL
         let select = document.getElementById('linhaInicio');
         let valueLinha = select.options[select.selectedIndex].value;
         START_NODE_ROW = parseInt(valueLinha)
         select = document.getElementById('colunaInicio');
         valueLinha = select.options[select.selectedIndex].value;
         START_NODE_COL = parseInt(valueLinha)
+
+        select = document.getElementById('linhaFinal');
+        valueLinha = select.options[select.selectedIndex].value;
+        FINISH_NODE_ROW = parseInt(valueLinha)
+        select = document.getElementById('colunaFinal');
+        valueLinha = select.options[select.selectedIndex].value;
+        FINISH_NODE_COL = parseInt(valueLinha)
+        grid[aux1][aux2].isStart = false
+        grid[aux1][aux2].isFinish = false
+        grid[START_NODE_ROW][START_NODE_COL].isStart = true
+        grid[START_NODE_ROW][START_NODE_COL].isFinish = true
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         //Node Objetivo
         const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
@@ -163,23 +179,24 @@ class BuscaAEstrela extends Component {
         // Nós visitados
         let visitedNodesInOrder = new Array(4);
         //Recebe o menor caminho achado na busca
-        let nodesInShortestPathOrder =  new Array(4);
+        let nodesInShortestPathOrder = new Array(4);
+        let custoTotal = new Array(4);
         const colorArray = [];
 
         if ((startNode.heuristicaGreen < startNode.heuristicaRed) && (startNode.heuristicaGreen < startNode.heuristicaBlue)) {
-            
-            [ visitedNodesInOrder[0], nodesInShortestPathOrder[0] ] = AEstrela(grid, startNode, GreenNode, 'green');
+
+            [visitedNodesInOrder[0], nodesInShortestPathOrder[0], custoTotal[0]] = AEstrela(grid, startNode, GreenNode, 'green');
             if (GreenNode.heuristicaRed < GreenNode.heuristicaBlue) {
-                [ visitedNodesInOrder[1], nodesInShortestPathOrder[1] ] = AEstrela(grid, GreenNode, RedNode, 'red');
-                [ visitedNodesInOrder[2], nodesInShortestPathOrder[2] ] = AEstrela(grid, RedNode, BlueNode, 'blue');
-                [ visitedNodesInOrder[3], nodesInShortestPathOrder[3] ] = AEstrela(grid, BlueNode, finishNode, 'finish'); 
+                [visitedNodesInOrder[1], nodesInShortestPathOrder[1], custoTotal[1]] = AEstrela(grid, GreenNode, RedNode, 'red');
+                [visitedNodesInOrder[2], nodesInShortestPathOrder[2], custoTotal[2]] = AEstrela(grid, RedNode, BlueNode, 'blue');
+                [visitedNodesInOrder[3], nodesInShortestPathOrder[3], custoTotal[3]] = AEstrela(grid, BlueNode, finishNode, 'finish');
                 // Converte Array 2D para Array 1D e chama a função de animação
-                this.animateAEstrela([].concat(...visitedNodesInOrder), [].concat(...nodesInShortestPathOrder));
+                this.animateAEstrela([].concat(...visitedNodesInOrder), nodesInShortestPathOrder, [2, 4, 3, 1]);
             }
         }
 
-        // let custoTotal = custoFinal(finishNode) + custoFinal(RedNode) + custoFinal(BlueNode) + custoFinal(GreenNode);
-        // document.getElementById("custoTotalTxt").innerHTML = "Custo total: " + custoFinal(custoTotal);
+        let custoAux = custoTotal[0] + custoTotal[1] + custoTotal[2] + custoTotal[3] - startNode.custo
+        document.getElementById("custoTotalTxt").innerHTML = "Custo total: " + custoAux;
     }
 
     //View principal
@@ -193,9 +210,9 @@ class BuscaAEstrela extends Component {
                 <br />
                 <label id="custoTotalTxt"></label>
                 <br />
-                <label>Posição Inicial</label>
+                <label>Posição Inicial (onde o link começa)</label>
                 <br />
-                <label for="linhaInicio">Linha: </label>
+                <label htmlFor="linhaInicio">Linha: </label>
                 <select id="linhaInicio">
                     <option value="0">1</option>
                     <option value="1">2</option>
@@ -241,7 +258,7 @@ class BuscaAEstrela extends Component {
                     <option value="41">42</option>
                 </select>
                 <br />
-                <label for="colunaInicio">Coluna: </label>
+                <label htmlFor="colunaInicio">Coluna: </label>
                 <select id="colunaInicio">
                     <option value="0">1</option>
                     <option value="1">2</option>
@@ -267,6 +284,101 @@ class BuscaAEstrela extends Component {
                     <option value="21">22</option>
                     <option value="22">23</option>
                     <option value="23" selected>24</option>
+                    <option value="24">25</option>
+                    <option value="25">26</option>
+                    <option value="26">27</option>
+                    <option value="27">28</option>
+                    <option value="28">29</option>
+                    <option value="29">30</option>
+                    <option value="30">31</option>
+                    <option value="31">32</option>
+                    <option value="32">33</option>
+                    <option value="33">34</option>
+                    <option value="34">35</option>
+                    <option value="35">36</option>
+                    <option value="36">37</option>
+                    <option value="37">38</option>
+                    <option value="38">39</option>
+                    <option value="39">40</option>
+                    <option value="40">41</option>
+                    <option value="41">42</option>
+                </select>
+
+                <br />
+                <label>Posição Final (onde está a Master Sword)</label>
+                <br />
+                <label htmlFor="linhaFinal">Linha: </label>
+                <select id="linhaFinal">
+                    <option value="0">1</option>
+                    <option value="1" selected>2</option>
+                    <option value="2">3</option>
+                    <option value="3">4</option>
+                    <option value="4">5</option>
+                    <option value="5">6</option>
+                    <option value="6">7</option>
+                    <option value="7">8</option>
+                    <option value="8">9</option>
+                    <option value="9">10</option>
+                    <option value="10">11</option>
+                    <option value="11">12</option>
+                    <option value="12">13</option>
+                    <option value="13">14</option>
+                    <option value="14">15</option>
+                    <option value="15">16</option>
+                    <option value="16">17</option>
+                    <option value="17">18</option>
+                    <option value="18">19</option>
+                    <option value="19">20</option>
+                    <option value="20">21</option>
+                    <option value="21">22</option>
+                    <option value="22">23</option>
+                    <option value="23">24</option>
+                    <option value="24">25</option>
+                    <option value="25">26</option>
+                    <option value="26">27</option>
+                    <option value="27">28</option>
+                    <option value="28">29</option>
+                    <option value="29">30</option>
+                    <option value="30">31</option>
+                    <option value="31">32</option>
+                    <option value="32">33</option>
+                    <option value="33">34</option>
+                    <option value="34">35</option>
+                    <option value="35">36</option>
+                    <option value="36">37</option>
+                    <option value="37">38</option>
+                    <option value="38">39</option>
+                    <option value="39">40</option>
+                    <option value="40">41</option>
+                    <option value="41">42</option>
+                </select>
+                <br />
+                <label htmlFor="colunaFinal">Coluna: </label>
+                <select id="colunaFinal">
+                    <option value="0">1</option>
+                    <option value="1">2</option>
+                    <option value="2" selected>3</option>
+                    <option value="3">4</option>
+                    <option value="4">5</option>
+                    <option value="5">6</option>
+                    <option value="6">7</option>
+                    <option value="7">8</option>
+                    <option value="8">9</option>
+                    <option value="9">10</option>
+                    <option value="10">11</option>
+                    <option value="11">12</option>
+                    <option value="12">13</option>
+                    <option value="13">14</option>
+                    <option value="14">15</option>
+                    <option value="15">16</option>
+                    <option value="16">17</option>
+                    <option value="17">18</option>
+                    <option value="18">19</option>
+                    <option value="19">20</option>
+                    <option value="20">21</option>
+                    <option value="21">22</option>
+                    <option value="22">23</option>
+                    <option value="23">24</option>
                     <option value="24">25</option>
                     <option value="25">26</option>
                     <option value="26">27</option>
@@ -328,20 +440,20 @@ const getInitialGrid = () => {
         const currentRow = []
         for (let col = 0; col < 42; col++) {
             //Chama funções necessarias para criar cada node
-            currentRow.push(createNode(col, row, 
-                                       heuristica(row, col, FINISH_NODE_ROW, FINISH_NODE_COL),
-                                       calculaCusto(row, col),
-                                       heuristica(row, col, GREEN_AMULET_NODE_ROW, GREEN_AMULET_NODE_COL),
-                                       heuristica(row, col, RED_AMULET_NODE_ROW, RED_AMULET_NODE_COL),
-                                       heuristica(row, col, BLUE_AMULET_NODE_ROW, BLUE_AMULET_NODE_COL),
-                                       matriz[row][col]))
+            currentRow.push(createNode(col, row,
+                heuristica(row, col, FINISH_NODE_ROW, FINISH_NODE_COL),
+                calculaCusto(row, col),
+                heuristica(row, col, GREEN_AMULET_NODE_ROW, GREEN_AMULET_NODE_COL),
+                heuristica(row, col, RED_AMULET_NODE_ROW, RED_AMULET_NODE_COL),
+                heuristica(row, col, BLUE_AMULET_NODE_ROW, BLUE_AMULET_NODE_COL),
+                matriz[row][col]))
         }
         grid.push(currentRow);
     }
     return grid;
 }
 
-export function calculaCusto(row, col){
+export function calculaCusto(row, col) {
     //Calculo do custo com base nos numeros da matriz e o valor de custo de cada bioma
     if (matriz[row][col] === 1) {
         return grama
@@ -359,7 +471,7 @@ export function calculaCusto(row, col){
 }
 
 const heuristica = (row, col, finish_row, finish_col) => {
-    return Math.sqrt(Math.pow(finish_row - row, 2) + Math.pow((finish_col - col), 2))*19;
+    return Math.sqrt(Math.pow(finish_row - row, 2) + Math.pow((finish_col - col), 2)) * 19;
 }
 
 //Cria o node (Objeto) com seus valores respectivos
