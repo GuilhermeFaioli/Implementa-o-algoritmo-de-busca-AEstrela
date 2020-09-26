@@ -94,11 +94,11 @@ class BuscaAEstrela extends Component {
     }
 
     //Função que ira criar animações no layout
-    animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, numbers) {
+    animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, numbers, custoPercorrido, custoInicial) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
             if (i === visitedNodesInOrder.length) {
                 setTimeout(() => {
-                    this.animateShortestPath(nodesInShortestPathOrder, numbers);
+                    this.animateShortestPath(nodesInShortestPathOrder, numbers, custoPercorrido, custoInicial);
                 }, 10 * i);
                 return;
             }
@@ -111,16 +111,17 @@ class BuscaAEstrela extends Component {
     }
 
     //Função que ira criar animações do menor caminho
-    animateShortestPath(nodesInShortestPathOrder, numbers) {
-        let count = -1
-        
+    animateShortestPath(nodesInShortestPathOrder, numbers, custoPercorrido, custoInicial) {
+        let count = 0
+        let custo = -custoInicial
         for (let i = 0; i < numbers.length; i++) {
             let number = numbers[i]
-
             for (let j = 0; j < nodesInShortestPathOrder[i].length; j++) {
                 setTimeout(() => {
-                    const node = nodesInShortestPathOrder[i][j];
                     
+                    const node = nodesInShortestPathOrder[i][j];
+                    custo = custo + custoPercorrido[i][j]
+                    document.getElementById("custoPercorrido").innerHTML = "Custo do caminho percorrido: " + custo;
                     switch (number) {
                         case 1:
                             document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path'
@@ -184,7 +185,7 @@ class BuscaAEstrela extends Component {
         // Ordem dos nós objetivos
         let order;
         let custo = 0
-
+        let custoPercorrido = []
         costs.push(startNode.heuristicaGreen + GreenNode.heuristicaRed + RedNode.heuristicaBlue + BlueNode.heuristica);
         costs.push(startNode.heuristicaGreen + GreenNode.heuristicaBlue + BlueNode.heuristicaRed + RedNode.heuristica);
         costs.push(startNode.heuristicaRed + RedNode.heuristicaGreen + GreenNode.heuristicaBlue + BlueNode.heuristica);
@@ -203,8 +204,12 @@ class BuscaAEstrela extends Component {
             case 4: order = [startNode, BlueNode, RedNode, GreenNode, finishNode]; colorArray = [3, 4, 2, 1]; break;
             case 5: order = [startNode, BlueNode, GreenNode, RedNode, finishNode]; colorArray = [3, 2, 4, 1]; break;
         }
-
+        let aux = 0
         while (order.length > 1) {
+
+            
+
+
 
             const start = order.shift();
             const dest = order[0];
@@ -217,17 +222,39 @@ class BuscaAEstrela extends Component {
                 case finishNode: finish = 'finish'; break;
             }
 
-            const [visited, shortestPath, custoAux] = AEstrela(grid, start, dest, finish);
+            const [visited, shortestPath, custoAux, custoPercorridoAux] = AEstrela(grid, start, dest, finish);
             custo = custo + custoAux
+            custoPercorrido.push(custoPercorridoAux)
             for (const v of visited) {
                 visitedNodesInOrder.push(v);
             }
                     
             nodesInShortestPathOrder.push(shortestPath);
-    
+            let total = 0
+            total = custoPercorridoAux.reduce((total, currentElement) => total + currentElement)
+
+            switch (colorArray[aux]) {
+                case 1:
+                    document.getElementById("custoPercorridoLaranja").innerHTML = "Custo do caminho Laranja: " + total;
+                    break
+                case 2:
+                    document.getElementById("custoPercorridoVerde").innerHTML = "Custo do caminho Verde: " + (total - startNode.custo);
+                    break
+                case 3:
+                    document.getElementById("custoPercorridoAzul").innerHTML = "Custo do caminho Azul: " + total;
+                    break
+                case 4:
+                    document.getElementById("custoPercorridoVermelho").innerHTML = "Custo do caminho Vermelho: " + total;
+                    break
+            }
+            aux++
+
         }
 
-        this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, colorArray);
+        
+        
+
+        this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, colorArray, custoPercorrido, startNode.custo);
 
         let custoTotal = custo - startNode.custo
         document.getElementById("custoTotalTxt").innerHTML = "Custo total: " + custoTotal;
@@ -444,8 +471,16 @@ class BuscaAEstrela extends Component {
                 <div className="AmuletoVerde"></div> <label>Amuleto Verde</label> <br />
                 <div className="AmuletoAzul"></div> <label>Amuleto Azul</label> <br />
                 <div className="AmuletoVermelho"></div> <label>Amuleto Vermelho</label> <br />
-                
-                
+                <label id="custoPercorridoAzul"></label>
+                <br />
+                <label id="custoPercorridoVerde"></label>
+                <br />
+                <label id="custoPercorridoVermelho"></label>
+                <br />
+                <label id="custoPercorridoLaranja"></label>
+                <br />
+                <label id="custoPercorrido"></label>
+                <br />
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
                         return (

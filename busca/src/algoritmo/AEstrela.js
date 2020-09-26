@@ -37,7 +37,8 @@ export function AEstrela(grid, startNode, finishNode, finish) {
             let aux = getNodesInShortestPathOrder(finishNode)
             let aux1 = aux.shift()
             let aux2 = aux.shift()
-            return [visitedNodesInOrder, aux1, aux2];
+            let aux3 = aux.shift()
+            return [visitedNodesInOrder, aux1, aux2, aux3];
         }
         //Atualiza os proximos nos a serem expandidos, dando valor de distancia(custo + heuristica) para eles, e assim no proximo loop eles serão ordenados na frente dos outros nodes em ordem de distancia(custo + heuristica)
         updateUnvisitedNeighbors(closestNode, newGrid, finish);
@@ -113,16 +114,18 @@ export function getNodesInShortestPathOrder(finishNode) {
     //Cria um array em ordem do  menor caminho a ser seguido ao objetivo
     const nodesInShortestPathOrder = [];
     let custoTotal = 0
+    let custoPercorrido = []
     //Coloca o node objetivo como node atual
     let currentNode = finishNode;
     while (currentNode !== null) {
         //Adiciona o node atual no inicio do array de menor caminho a ser seguido
         custoTotal = custoTotal + currentNode.custo
+        custoPercorrido.push(currentNode.custo)
         nodesInShortestPathOrder.unshift(currentNode)
         //Coloca o node anterior a expansão salvo como node atual, esse processo se repete ate que não tenha mais node anterior (ate chegar no node inicial)
         currentNode = currentNode.previousNode;
     }
     //Retorna array com o menor caminho a ser seguido encontrado pela busca a*
-    return [nodesInShortestPathOrder, custoTotal]
+    return [nodesInShortestPathOrder, custoTotal, custoPercorrido]
 }
 
