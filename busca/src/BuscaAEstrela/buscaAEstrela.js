@@ -94,11 +94,11 @@ class BuscaAEstrela extends Component {
     }
 
     //Função que ira criar animações no layout
-    animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder) {
+    animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, numbers) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
             if (i === visitedNodesInOrder.length) {
                 setTimeout(() => {
-                    this.animateShortestPath(nodesInShortestPathOrder);
+                    this.animateShortestPath(nodesInShortestPathOrder, numbers);
                 }, 10 * i);
                 return;
             }
