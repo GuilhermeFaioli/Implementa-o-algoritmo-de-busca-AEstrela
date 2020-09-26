@@ -110,8 +110,8 @@
     }
   }
 
-  .node-shortest-path1 {
-    animation-name: shortestPath1;
+  .node-shortest-pathGreen {
+    animation-name: shortestPathGreen;
     animation-duration: 1.5s;
     animation-timing-function: ease-out;
     animation-delay: 0;
@@ -121,7 +121,7 @@
     animation-play-state: running;
   }
   
-  @keyframes shortestPath1 {
+  @keyframes shortestPathGreen {
     0% {
       transform: scale(0.6);
       background-color: rgb(123, 250, 64);
@@ -138,8 +138,8 @@
     }
   }
 
-  .node-shortest-path2 {
-    animation-name: shortestPath2;
+  .node-shortest-pathBlue {
+    animation-name: shortestPathBlue;
     animation-duration: 1.5s;
     animation-timing-function: ease-out;
     animation-delay: 0;
@@ -149,7 +149,7 @@
     animation-play-state: running;
   }
   
-  @keyframes shortestPath2 {
+  @keyframes shortestPathBlue {
     0% {
       transform: scale(0.6);
       background-color: blue;
@@ -166,8 +166,8 @@
     }
   }
 
-  .node-shortest-path3 {
-    animation-name: shortestPath3;
+  .node-shortest-pathRed {
+    animation-name: shortestPathRed;
     animation-duration: 1.5s;
     animation-timing-function: ease-out;
     animation-delay: 0;
@@ -177,7 +177,7 @@
     animation-play-state: running;
   }
   
-  @keyframes shortestPath3 {
+  @keyframes shortestPathRed {
     0% {
       transform: scale(0.6);
       background-color: rgb(253, 16, 16);
