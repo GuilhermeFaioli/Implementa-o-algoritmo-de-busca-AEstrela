@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Node from "./Node/Node"
 import './buscaAEstrela.css'
 import { AEstrela, getNodesInShortestPathOrder, custoFinal } from '../algoritmo/AEstrela';
+import 'bootstrap/dist/css/bootstrap.css';
 
 //Valores referentes a linha e coluna inicial e final, valores de custo por bioma do campo, e a matriz dando numeros referentes ao biomas
 let START_NODE_ROW = 27;
@@ -88,11 +89,6 @@ class BuscaAEstrela extends Component {
         this.setState({ grid })
     }
 
-    //Função inutil, remover
-    handleMouseUp() {
-        this.setState({ mouseIsPressed: false });
-    }
-
     //Função que ira criar animações no layout
     animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, numbers, custoPercorrido, custoInicial) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
@@ -121,7 +117,7 @@ class BuscaAEstrela extends Component {
                     
                     const node = nodesInShortestPathOrder[i][j];
                     custo = custo + custoPercorrido[i][j]
-                    document.getElementById("custoPercorrido").innerHTML = "Custo do caminho percorrido: " + custo;
+                    document.getElementById("custoPercorrido").innerHTML = "Custo total: " + custo;
                     switch (number) {
                         case 1:
                             document.getElementById(`node-${node.row}-${node.col}`).className = 'node node-shortest-path'
@@ -144,26 +140,7 @@ class BuscaAEstrela extends Component {
 
     visualizeAEstrela() {
         const { grid } = this.state;
-        //Node inicial
-        const aux1 = START_NODE_ROW
-        const aux2 = START_NODE_COL
-        let select = document.getElementById('linhaInicio');
-        let valueLinha = select.options[select.selectedIndex].value;
-        START_NODE_ROW = parseInt(valueLinha)
-        select = document.getElementById('colunaInicio');
-        valueLinha = select.options[select.selectedIndex].value;
-        START_NODE_COL = parseInt(valueLinha)
-
-        select = document.getElementById('linhaFinal');
-        valueLinha = select.options[select.selectedIndex].value;
-        FINISH_NODE_ROW = parseInt(valueLinha)
-        select = document.getElementById('colunaFinal');
-        valueLinha = select.options[select.selectedIndex].value;
-        FINISH_NODE_COL = parseInt(valueLinha)
-        grid[aux1][aux2].isStart = false
-        grid[aux1][aux2].isFinish = false
-        grid[START_NODE_ROW][START_NODE_COL].isStart = true
-        grid[START_NODE_ROW][START_NODE_COL].isFinish = true
+        
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         //Node Objetivo
         const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
@@ -195,7 +172,7 @@ class BuscaAEstrela extends Component {
 
         // Indice do menor custo
         const i = costs.indexOf(Math.min.apply(null, costs));
-
+        console.log(costs);
         switch (i) {
             case 0: order = [startNode, GreenNode, RedNode, BlueNode, finishNode]; colorArray = [2, 4, 3, 1]; break;
             case 1: order = [startNode, GreenNode, BlueNode, RedNode, finishNode]; colorArray = [2, 3, 4, 1]; break;
@@ -206,10 +183,6 @@ class BuscaAEstrela extends Component {
         }
         let aux = 0
         while (order.length > 1) {
-
-            
-
-
 
             const start = order.shift();
             const dest = order[0];
@@ -251,13 +224,34 @@ class BuscaAEstrela extends Component {
 
         }
 
-        
-        
+        document.getElementById("custoPercorrido").innerHTML = "Custo total: ";
 
         this.animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, colorArray, custoPercorrido, startNode.custo);
+    }
 
-        let custoTotal = custo - startNode.custo
-        document.getElementById("custoTotalTxt").innerHTML = "Custo total: " + custoTotal;
+    alterarPosicao() {
+
+        // No inicial
+        const aux1 = START_NODE_ROW
+        const aux2 = START_NODE_COL
+        let select = document.getElementById('linhaInicio');
+        let valueLinha = select.options[select.selectedIndex].value;
+        START_NODE_ROW = parseInt(valueLinha)
+        select = document.getElementById('colunaInicio');
+        valueLinha = select.options[select.selectedIndex].value;
+        START_NODE_COL = parseInt(valueLinha)
+
+        // No final
+        select = document.getElementById('linhaFinal');
+        valueLinha = select.options[select.selectedIndex].value;
+        FINISH_NODE_ROW = parseInt(valueLinha)
+        select = document.getElementById('colunaFinal');
+        valueLinha = select.options[select.selectedIndex].value;
+        FINISH_NODE_COL = parseInt(valueLinha)
+
+        //Cria grid de objetos
+        const grid = getInitialGrid()
+        this.setState({ grid })
     }
 
     //View principal
@@ -265,203 +259,216 @@ class BuscaAEstrela extends Component {
         const { grid, mouseIsPressed } = this.state;
         return (
             <>
-                <button onClick={() => this.visualizeAEstrela()}>
+                <button type="button" class="btn btn-primary" onClick={() => this.visualizeAEstrela()}>
                     Visualize o algoritmo A*
                 </button>
-                <button onClick={() => window.location.reload()}>
+
+                <button type="button" class="btn btn-primary" onClick={() => window.location.reload()}>
                     Limpar campo
                 </button>
+        
                 <br />
-                <label id="custoTotalTxt"></label>
                 <br />
                 <label>Posição Inicial (onde o link começa)</label>
-                <br />
-                <label htmlFor="linhaInicio">Linha: </label>
-                <select id="linhaInicio">
-                    <option value="0">1</option>
-                    <option value="1">2</option>
-                    <option value="2">3</option>
-                    <option value="3">4</option>
-                    <option value="4">5</option>
-                    <option value="5">6</option>
-                    <option value="6">7</option>
-                    <option value="7">8</option>
-                    <option value="8">9</option>
-                    <option value="9">10</option>
-                    <option value="10">11</option>
-                    <option value="11">12</option>
-                    <option value="12">13</option>
-                    <option value="13">14</option>
-                    <option value="14">15</option>
-                    <option value="15">16</option>
-                    <option value="16">17</option>
-                    <option value="17">18</option>
-                    <option value="18">19</option>
-                    <option value="19">20</option>
-                    <option value="20">21</option>
-                    <option value="21">22</option>
-                    <option value="22">23</option>
-                    <option value="23">24</option>
-                    <option value="24">25</option>
-                    <option value="25">26</option>
-                    <option value="26">27</option>
-                    <option value="27" selected>28</option>
-                    <option value="28">29</option>
-                    <option value="29">30</option>
-                    <option value="30">31</option>
-                    <option value="31">32</option>
-                    <option value="32">33</option>
-                    <option value="33">34</option>
-                    <option value="34">35</option>
-                    <option value="35">36</option>
-                    <option value="36">37</option>
-                    <option value="37">38</option>
-                    <option value="38">39</option>
-                    <option value="39">40</option>
-                    <option value="40">41</option>
-                    <option value="41">42</option>
-                </select>
-                <br />
-                <label htmlFor="colunaInicio">Coluna: </label>
-                <select id="colunaInicio">
-                    <option value="0">1</option>
-                    <option value="1">2</option>
-                    <option value="2">3</option>
-                    <option value="3">4</option>
-                    <option value="4">5</option>
-                    <option value="5">6</option>
-                    <option value="6">7</option>
-                    <option value="7">8</option>
-                    <option value="8">9</option>
-                    <option value="9">10</option>
-                    <option value="10">11</option>
-                    <option value="11">12</option>
-                    <option value="12">13</option>
-                    <option value="13">14</option>
-                    <option value="14">15</option>
-                    <option value="15">16</option>
-                    <option value="16">17</option>
-                    <option value="17">18</option>
-                    <option value="18">19</option>
-                    <option value="19">20</option>
-                    <option value="20">21</option>
-                    <option value="21">22</option>
-                    <option value="22">23</option>
-                    <option value="23" selected>24</option>
-                    <option value="24">25</option>
-                    <option value="25">26</option>
-                    <option value="26">27</option>
-                    <option value="27">28</option>
-                    <option value="28">29</option>
-                    <option value="29">30</option>
-                    <option value="30">31</option>
-                    <option value="31">32</option>
-                    <option value="32">33</option>
-                    <option value="33">34</option>
-                    <option value="34">35</option>
-                    <option value="35">36</option>
-                    <option value="36">37</option>
-                    <option value="37">38</option>
-                    <option value="38">39</option>
-                    <option value="39">40</option>
-                    <option value="40">41</option>
-                    <option value="41">42</option>
-                </select>
 
-                <br />
+                <div class="row">
+                    <div class="col">
+                    <label class="lbl" htmlFor="linhaInicio">Linha: </label>
+                    <select class="sel" id="linhaInicio">
+                        <option value="0">1</option>
+                        <option value="1">2</option>
+                        <option value="2">3</option>
+                        <option value="3">4</option>
+                        <option value="4">5</option>
+                        <option value="5">6</option>
+                        <option value="6">7</option>
+                        <option value="7">8</option>
+                        <option value="8">9</option>
+                        <option value="9">10</option>
+                        <option value="10">11</option>
+                        <option value="11">12</option>
+                        <option value="12">13</option>
+                        <option value="13">14</option>
+                        <option value="14">15</option>
+                        <option value="15">16</option>
+                        <option value="16">17</option>
+                        <option value="17">18</option>
+                        <option value="18">19</option>
+                        <option value="19">20</option>
+                        <option value="20">21</option>
+                        <option value="21">22</option>
+                        <option value="22">23</option>
+                        <option value="23">24</option>
+                        <option value="24">25</option>
+                        <option value="25">26</option>
+                        <option value="26">27</option>
+                        <option value="27" selected>28</option>
+                        <option value="28">29</option>
+                        <option value="29">30</option>
+                        <option value="30">31</option>
+                        <option value="31">32</option>
+                        <option value="32">33</option>
+                        <option value="33">34</option>
+                        <option value="34">35</option>
+                        <option value="35">36</option>
+                        <option value="36">37</option>
+                        <option value="37">38</option>
+                        <option value="38">39</option>
+                        <option value="39">40</option>
+                        <option value="40">41</option>
+                        <option value="41">42</option>
+                    </select>
+
+                    <label class="lbl" htmlFor="colunaInicio">Coluna: </label>
+                        <select class="sel" id="colunaInicio">
+                            <option value="0">1</option>
+                            <option value="1">2</option>
+                            <option value="2">3</option>
+                            <option value="3">4</option>
+                            <option value="4">5</option>
+                            <option value="5">6</option>
+                            <option value="6">7</option>
+                            <option value="7">8</option>
+                            <option value="8">9</option>
+                            <option value="9">10</option>
+                            <option value="10">11</option>
+                            <option value="11">12</option>
+                            <option value="12">13</option>
+                            <option value="13">14</option>
+                            <option value="14">15</option>
+                            <option value="15">16</option>
+                            <option value="16">17</option>
+                            <option value="17">18</option>
+                            <option value="18">19</option>
+                            <option value="19">20</option>
+                            <option value="20">21</option>
+                            <option value="21">22</option>
+                            <option value="22">23</option>
+                            <option value="23" selected>24</option>
+                            <option value="24">25</option>
+                            <option value="25">26</option>
+                            <option value="26">27</option>
+                            <option value="27">28</option>
+                            <option value="28">29</option>
+                            <option value="29">30</option>
+                            <option value="30">31</option>
+                            <option value="31">32</option>
+                            <option value="32">33</option>
+                            <option value="33">34</option>
+                            <option value="34">35</option>
+                            <option value="35">36</option>
+                            <option value="36">37</option>
+                            <option value="37">38</option>
+                            <option value="38">39</option>
+                            <option value="39">40</option>
+                            <option value="40">41</option>
+                            <option value="41">42</option>
+                        </select>
+
+                    </div>
+                </div>    
+
                 <label>Posição Final (onde está a Master Sword)</label>
+
+                <div class="row">
+                    <div class="col">
+                        <label class="lbl" htmlFor="linhaFinal">Linha: </label>
+                            <select class="sel" id="linhaFinal">
+                                <option value="0">1</option>
+                                <option value="1" selected>2</option>
+                                <option value="2">3</option>
+                                <option value="3">4</option>
+                                <option value="4">5</option>
+                                <option value="5">6</option>
+                                <option value="6">7</option>
+                                <option value="7">8</option>
+                                <option value="8">9</option>
+                                <option value="9">10</option>
+                                <option value="10">11</option>
+                                <option value="11">12</option>
+                                <option value="12">13</option>
+                                <option value="13">14</option>
+                                <option value="14">15</option>
+                                <option value="15">16</option>
+                                <option value="16">17</option>
+                                <option value="17">18</option>
+                                <option value="18">19</option>
+                                <option value="19">20</option>
+                                <option value="20">21</option>
+                                <option value="21">22</option>
+                                <option value="22">23</option>
+                                <option value="23">24</option>
+                                <option value="24">25</option>
+                                <option value="25">26</option>
+                                <option value="26">27</option>
+                                <option value="27">28</option>
+                                <option value="28">29</option>
+                                <option value="29">30</option>
+                                <option value="30">31</option>
+                                <option value="31">32</option>
+                                <option value="32">33</option>
+                                <option value="33">34</option>
+                                <option value="34">35</option>
+                                <option value="35">36</option>
+                                <option value="36">37</option>
+                                <option value="37">38</option>
+                                <option value="38">39</option>
+                                <option value="39">40</option>
+                                <option value="40">41</option>
+                                <option value="41">42</option>
+                            </select>                
+                        <label class="lbl" htmlFor="colunaFinal">Coluna: </label>
+                        <select class="sel" id="colunaFinal">
+                            <option value="0">1</option>
+                            <option value="1">2</option>
+                            <option value="2" selected>3</option>
+                            <option value="3">4</option>
+                            <option value="4">5</option>
+                            <option value="5">6</option>
+                            <option value="6">7</option>
+                            <option value="7">8</option>
+                            <option value="8">9</option>
+                            <option value="9">10</option>
+                            <option value="10">11</option>
+                            <option value="11">12</option>
+                            <option value="12">13</option>
+                            <option value="13">14</option>
+                            <option value="14">15</option>
+                            <option value="15">16</option>
+                            <option value="16">17</option>
+                            <option value="17">18</option>
+                            <option value="18">19</option>
+                            <option value="19">20</option>
+                            <option value="20">21</option>
+                            <option value="21">22</option>
+                            <option value="22">23</option>
+                            <option value="23">24</option>
+                            <option value="24">25</option>
+                            <option value="25">26</option>
+                            <option value="26">27</option>
+                            <option value="27">28</option>
+                            <option value="28">29</option>
+                            <option value="29">30</option>
+                            <option value="30">31</option>
+                            <option value="31">32</option>
+                            <option value="32">33</option>
+                            <option value="33">34</option>
+                            <option value="34">35</option>
+                            <option value="35">36</option>
+                            <option value="36">37</option>
+                            <option value="37">38</option>
+                            <option value="38">39</option>
+                            <option value="39">40</option>
+                            <option value="40">41</option>
+                            <option value="41">42</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onClick={() => this.alterarPosicao()}>
+                    Alterar posições
+                </button>
                 <br />
-                <label htmlFor="linhaFinal">Linha: </label>
-                <select id="linhaFinal">
-                    <option value="0">1</option>
-                    <option value="1" selected>2</option>
-                    <option value="2">3</option>
-                    <option value="3">4</option>
-                    <option value="4">5</option>
-                    <option value="5">6</option>
-                    <option value="6">7</option>
-                    <option value="7">8</option>
-                    <option value="8">9</option>
-                    <option value="9">10</option>
-                    <option value="10">11</option>
-                    <option value="11">12</option>
-                    <option value="12">13</option>
-                    <option value="13">14</option>
-                    <option value="14">15</option>
-                    <option value="15">16</option>
-                    <option value="16">17</option>
-                    <option value="17">18</option>
-                    <option value="18">19</option>
-                    <option value="19">20</option>
-                    <option value="20">21</option>
-                    <option value="21">22</option>
-                    <option value="22">23</option>
-                    <option value="23">24</option>
-                    <option value="24">25</option>
-                    <option value="25">26</option>
-                    <option value="26">27</option>
-                    <option value="27">28</option>
-                    <option value="28">29</option>
-                    <option value="29">30</option>
-                    <option value="30">31</option>
-                    <option value="31">32</option>
-                    <option value="32">33</option>
-                    <option value="33">34</option>
-                    <option value="34">35</option>
-                    <option value="35">36</option>
-                    <option value="36">37</option>
-                    <option value="37">38</option>
-                    <option value="38">39</option>
-                    <option value="39">40</option>
-                    <option value="40">41</option>
-                    <option value="41">42</option>
-                </select>
-                <br />
-                <label htmlFor="colunaFinal">Coluna: </label>
-                <select id="colunaFinal">
-                    <option value="0">1</option>
-                    <option value="1">2</option>
-                    <option value="2" selected>3</option>
-                    <option value="3">4</option>
-                    <option value="4">5</option>
-                    <option value="5">6</option>
-                    <option value="6">7</option>
-                    <option value="7">8</option>
-                    <option value="8">9</option>
-                    <option value="9">10</option>
-                    <option value="10">11</option>
-                    <option value="11">12</option>
-                    <option value="12">13</option>
-                    <option value="13">14</option>
-                    <option value="14">15</option>
-                    <option value="15">16</option>
-                    <option value="16">17</option>
-                    <option value="17">18</option>
-                    <option value="18">19</option>
-                    <option value="19">20</option>
-                    <option value="20">21</option>
-                    <option value="21">22</option>
-                    <option value="22">23</option>
-                    <option value="23">24</option>
-                    <option value="24">25</option>
-                    <option value="25">26</option>
-                    <option value="26">27</option>
-                    <option value="27">28</option>
-                    <option value="28">29</option>
-                    <option value="29">30</option>
-                    <option value="30">31</option>
-                    <option value="31">32</option>
-                    <option value="32">33</option>
-                    <option value="33">34</option>
-                    <option value="34">35</option>
-                    <option value="35">36</option>
-                    <option value="36">37</option>
-                    <option value="37">38</option>
-                    <option value="38">39</option>
-                    <option value="39">40</option>
-                    <option value="40">41</option>
-                    <option value="41">42</option>
-                </select>
                 <br />
                 <label>Legenda:</label>
                 <br />
@@ -481,6 +488,7 @@ class BuscaAEstrela extends Component {
                 <br />
                 <label id="custoPercorrido"></label>
                 <br />
+                
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
                         return (
@@ -554,7 +562,7 @@ export function calculaCusto(row, col) {
 }
 
 const heuristica = (row, col, finish_row, finish_col) => {
-    return Math.sqrt(Math.pow(finish_row - row, 2) + Math.pow((finish_col - col), 2)) * 19;
+    return Math.sqrt(Math.pow(finish_row - row, 2) + Math.pow((finish_col - col), 2))*19;
 }
 
 //Cria o node (Objeto) com seus valores respectivos

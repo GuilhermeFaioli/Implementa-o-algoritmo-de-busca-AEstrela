@@ -37,8 +37,7 @@ export default class Node extends Component {
             <div
                 id={`node-${row}-${col}`}
                 className={`node ${extraClassName}`}
-                //Inutil, remover
-                onMouseUp={() => onMouseUp()}></div>
+            ></div>
         )
     }
 }

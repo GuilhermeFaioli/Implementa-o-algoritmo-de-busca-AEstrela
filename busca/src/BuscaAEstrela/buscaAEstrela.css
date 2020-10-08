@@ -3,7 +3,17 @@
     margin-left: 15%;
 }
 
+.btn {
+    margin-right: 10px;
+}
 
+.lbl {
+    margin-right: 5px;
+}
+
+.sel {
+    margin-right: 10px;
+}
 
 .Inicio {
     background-color: purple;
