@@ -507,9 +507,6 @@ class BuscaAEstrela extends Component {
                                             campo={campo}
                                             heuristica={heuristica}
                                             custo={custo}
-                                            mouseIsPressed={mouseIsPressed}
-                                            //Remover
-                                            onMouseUp={() => this.handleMouseUp()}
                                             row={row}></Node>
                                     );
                                 })}
