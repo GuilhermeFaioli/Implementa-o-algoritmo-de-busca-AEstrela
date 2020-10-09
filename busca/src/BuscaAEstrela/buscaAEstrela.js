@@ -89,7 +89,10 @@ class BuscaAEstrela extends Component {
         this.setState({ grid })
     }
 
-    //Função que ira criar animações no layout
+    /**
+     * Função que ira criar animações no layout
+     * Adaptada de: https://github.com/clementmihailescu/Pathfinding-Visualizer-Tutorial.git
+     */
     animateAEstrela(visitedNodesInOrder, nodesInShortestPathOrder, numbers, custoPercorrido, custoInicial) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
             if (i === visitedNodesInOrder.length) {
@@ -106,7 +109,10 @@ class BuscaAEstrela extends Component {
         }
     }
 
-    //Função que ira criar animações do menor caminho
+    /**
+     * Função que ira criar animações do menor caminho
+     * Adaptada de: https://github.com/clementmihailescu/Pathfinding-Visualizer-Tutorial.git
+     */
     animateShortestPath(nodesInShortestPathOrder, numbers, custoPercorrido, custoInicial) {
         let count = 0
         let custo = -custoInicial
