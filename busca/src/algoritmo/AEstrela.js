@@ -6,25 +6,25 @@ export function AEstrela(grid, startNode, finishNode, finish) {
     const visitedNodesInOrder = [];
 
     let newGrid = copyGrid(grid);
-    
+
     //Inicia a distancia do nó inicial como 0
     newGrid[startNode.row][startNode.col].distance = 0;
 
     // nó final passa a ter a referencia do novo grid
     finishNode = newGrid[finishNode.row][finishNode.col];
-    
+
     //Coloca todo o grid(matriz de objetos) de node como array, ao invez de matriz, esse array se torna o array de nodes que ainda não foram visitados
     let unvisitedNodes = getAllNodes(newGrid);
-    
+
     //Loop enquanto há elementos não visitados, o programa não chega no objetivo ou ele fica preso em algum lugar com distancia infinita
     while (!!unvisitedNodes.length) {
 
         //Ordena os nodes do array não visitado em ordem crescente de distancia(custo + heuristica). Na primeira vez que programa roda o node inicial tem distancia 0 e os demais tem distancia infinita, fazendo com que ele fique em primeiro
         sortNodesByDistance(unvisitedNodes, finish);
-        
+
         //Remove primeiro elemento do array, o elemento com menor distancia(custo + heuristica) espandido ate esse momento
         const closestNode = unvisitedNodes.shift();
-        
+
         //Loop para caso ele encontre distancia(custo) infinito, isso não é para acontencer, todos os nodes devem ter custo calculado quando a função updateUnvisitedNeighbors é chamada, o primeiro node tem distancia 0
         if (closestNode.distance === Infinity) return visitedNodesInOrder;
         closestNode.isVisited = true;
@@ -112,7 +112,7 @@ function getAllNodes(grid) {
 
 export function getNodesInShortestPathOrder(finishNode) {
     //Cria um array em ordem do  menor caminho a ser seguido ao objetivo
-    const nodesInShortestPathOrder = [];
+    let nodesInShortestPathOrder = [];
     let custoTotal = 0
     let custoPercorrido = []
     //Coloca o node objetivo como node atual
@@ -122,6 +122,7 @@ export function getNodesInShortestPathOrder(finishNode) {
         custoTotal = custoTotal + currentNode.custo
         custoPercorrido.push(currentNode.custo)
         nodesInShortestPathOrder.unshift(currentNode)
+
         //Coloca o node anterior a expansão salvo como node atual, esse processo se repete ate que não tenha mais node anterior (ate chegar no node inicial)
         currentNode = currentNode.previousNode;
     }

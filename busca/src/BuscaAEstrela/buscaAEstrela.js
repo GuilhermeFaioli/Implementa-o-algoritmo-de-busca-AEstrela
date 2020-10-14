@@ -20,6 +20,23 @@ const areia = 20;
 const floresta = 100;
 const montanha = 150;
 const agua = 180;
+
+// let START_NODE_ROW = 27;
+// let START_NODE_COL = 23;
+// const GREEN_AMULET_NODE_ROW = 27;
+// const GREEN_AMULET_NODE_COL = 21;
+// const RED_AMULET_NODE_ROW = 27;
+// const RED_AMULET_NODE_COL = 19;
+// const BLUE_AMULET_NODE_ROW = 27;
+// const BLUE_AMULET_NODE_COL = 17;
+// let FINISH_NODE_ROW = 25;
+// let FINISH_NODE_COL = 13;
+// const grama = 10;
+// const areia = 20;
+// const floresta = 100;
+// const montanha = 150;
+// const agua = 180;
+
 /*
     1 - grama: custo 10
     2 - areia: custo 20
@@ -114,8 +131,9 @@ class BuscaAEstrela extends Component {
      * Adaptada de: https://github.com/clementmihailescu/Pathfinding-Visualizer-Tutorial.git
      */
     animateShortestPath(nodesInShortestPathOrder, numbers, custoPercorrido, custoInicial) {
+        const { grid } = this.state;
         let count = 0
-        let custo = -custoInicial
+        let custo = -custoInicial-grid[GREEN_AMULET_NODE_ROW][GREEN_AMULET_NODE_COL].custo-grid[RED_AMULET_NODE_ROW][RED_AMULET_NODE_COL].custo-grid[BLUE_AMULET_NODE_ROW][BLUE_AMULET_NODE_COL].custo
         for (let i = 0; i < numbers.length; i++) {
             let number = numbers[i]
             for (let j = 0; j < nodesInShortestPathOrder[i].length; j++) {
@@ -169,6 +187,7 @@ class BuscaAEstrela extends Component {
         let order;
         let custo = 0
         let custoPercorrido = []
+        
         costs.push(startNode.heuristicaGreen + GreenNode.heuristicaRed + RedNode.heuristicaBlue + BlueNode.heuristica);
         costs.push(startNode.heuristicaGreen + GreenNode.heuristicaBlue + BlueNode.heuristicaRed + RedNode.heuristica);
         costs.push(startNode.heuristicaRed + RedNode.heuristicaGreen + GreenNode.heuristicaBlue + BlueNode.heuristica);
@@ -178,7 +197,7 @@ class BuscaAEstrela extends Component {
 
         // Indice do menor custo
         const i = costs.indexOf(Math.min.apply(null, costs));
-        console.log(costs);
+        
         switch (i) {
             case 0: order = [startNode, GreenNode, RedNode, BlueNode, finishNode]; colorArray = [2, 4, 3, 1]; break;
             case 1: order = [startNode, GreenNode, BlueNode, RedNode, finishNode]; colorArray = [2, 3, 4, 1]; break;
@@ -187,6 +206,7 @@ class BuscaAEstrela extends Component {
             case 4: order = [startNode, BlueNode, RedNode, GreenNode, finishNode]; colorArray = [3, 4, 2, 1]; break;
             case 5: order = [startNode, BlueNode, GreenNode, RedNode, finishNode]; colorArray = [3, 2, 4, 1]; break;
         }
+        
         let aux = 0
         while (order.length > 1) {
 
